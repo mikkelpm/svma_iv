@@ -4,10 +4,9 @@ function [bounds_CI_IS,bounds_CI_para] = CI_fun(bounds_boot,bounds_OLS,settings)
 % Get Inputs
 %----------------------------------------------------------------
 
-fields       = settings.fields;
+fields       = fieldnames(bounds_OLS);
 signif_level = settings.signif_level;
 optimopts    = settings.optimopts;
-fields_param = settings.fields_param;
 
 %----------------------------------------------------------------
 % Quantiles of Bootstrap Draws
@@ -15,8 +14,8 @@ fields_param = settings.fields_param;
 
 for j=1:length(fields)
     bounds_boot_mean.(fields{j}) = squeeze(mean(bounds_boot.(fields{j}),3)); % Average
-    bounds_boot_plow.(fields{j}) = squeeze(quantile(bsxfun(@minus, bounds_boot.(fields{j}), bounds_OLS.(fields{j})),signif_level/2,3)); % Lower quantile
-    bounds_boot_phigh.(fields{j}) = squeeze(quantile(bsxfun(@minus, bounds_boot.(fields{j}), bounds_OLS.(fields{j})),1-signif_level/2,3)); % Upper quantile
+    bounds_boot_plow.(fields{j}) = squeeze(quantile(bounds_boot.(fields{j})-bounds_OLS.(fields{j}),signif_level/2,3)); % Lower quantile
+    bounds_boot_phigh.(fields{j}) = squeeze(quantile(bounds_boot.(fields{j})-bounds_OLS.(fields{j}),1-signif_level/2,3)); % Upper quantile
 end
 
 %----------------------------------------------------------------
@@ -33,12 +32,24 @@ end
 % CI for Parameter
 %----------------------------------------------------------------
 
-for j=1:length(fields_param)
+bounds_CI_para = struct;
+if ~settings.CI_para
+    return;
+end
+
+for j=1:length(fields)
     
-    field_LB = sprintf('%s_LB', fields_param{j});
-    field_UB = sprintf('%s_UB', fields_param{j});
-    bounds_CI_para.lower.(fields_param{j}) = zeros(size(bounds_OLS.(field_LB)));
-    bounds_CI_para.upper.(fields_param{j}) = zeros(size(bounds_OLS.(field_LB)));
+    lb_pos = strfind(fields{j},'_LB');
+    if isempty(lb_pos)
+        continue;
+    else
+        the_param = extractBefore(fields{j},lb_pos); % Name of parameter
+    end
+    
+    field_LB = fields{j}; % Lower bound field
+    field_UB = sprintf('%s_UB', the_param); % Upper bound field
+    bounds_CI_para.lower.(the_param) = zeros(size(bounds_OLS.(field_LB)));
+    bounds_CI_para.upper.(the_param) = zeros(size(bounds_OLS.(field_LB)));
     
     for l=1:size(bounds_OLS.(field_LB),1)
         for m=1:size(bounds_OLS.(field_LB),2)
@@ -46,21 +57,11 @@ for j=1:length(fields_param)
             % Bootstrap var-cov matrix of estimated lower and upper bounds
             varcov = cov([squeeze(bounds_boot.(field_LB)(l,m,:)) squeeze(bounds_boot.(field_UB)(l,m,:))]);
             
-            % adjust for boundary cases in FVR/FVD
-            
-%             if strcmp(sprintf(fields_param{j}),'FVR') || strcmp(sprintf(fields_param{j}),'FVD')
-%                 if bounds_CI_IS.OLS_biascorr.(field_LB)(l,m) <= 0
-%                     bounds_CI_IS.OLS_biascorr.(field_LB)(l,m) = bounds_OLS.(field_LB)(l,m);
-%                 end
-%                 if bounds_CI_IS.OLS_biascorr.(field_UB)(l,m) <= 0
-%                     bounds_CI_IS.OLS_biascorr.(field_UB)(l,m) = bounds_OLS.(field_UB)(l,m);
-%                 end
-%             end    
-            if strcmp(sprintf(fields_param{j}),'FVR') || strcmp(sprintf(fields_param{j}),'FVD')
+            % Enforce parameter in [0,1] (except alpha)
+            if ~strcmp(the_param,'alpha')
                   bounds_CI_IS.OLS_biascorr.(field_LB)(l,m) = max(0,bounds_CI_IS.OLS_biascorr.(field_LB)(l,m));
                   bounds_CI_IS.OLS_biascorr.(field_UB)(l,m) = max(0,bounds_CI_IS.OLS_biascorr.(field_UB)(l,m));
-            end                
-
+            end
             
             % Compute Stoye (2009) confidence interval
             CI = stoye_CI(bounds_CI_IS.OLS_biascorr.(field_LB)(l,m), ...
@@ -68,8 +69,8 @@ for j=1:length(fields_param)
                               varcov, ...
                               signif_level, ...
                               optimopts);
-            bounds_CI_para.lower.(fields_param{j})(l,m) = CI(1);
-            bounds_CI_para.upper.(fields_param{j})(l,m) = CI(2);
+            bounds_CI_para.lower.(the_param)(l,m) = CI(1);
+            bounds_CI_para.upper.(the_param)(l,m) = CI(2);
             
         end    
     end
