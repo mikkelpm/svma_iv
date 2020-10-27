@@ -128,20 +128,21 @@ function [bounds, id_recov, settings] = SVMAIV_estim(Y, Z, varargin)
     
     %% Compute bounds for each bootstrap iteration
     
-    n_boot = ip.Results.n_boot;
     VAR_sim = VAR_OLS;
     fields = fieldnames(bounds_OLS);
     
     for j=1:length(fields)
-        bounds_boot.(fields{j}) = zeros([size(bounds_OLS.(fields{j})) settings.n_boot]);
+        bounds_boot.(fields{j}) = NaN([size(bounds_OLS.(fields{j})) settings.n_boot]);
     end
     
     disp('Mapping each bootstrap draw into objects of interest...');
+    fprintf(strcat(repmat('%4d',1,10), '%s\n'), 10:10:100, '%');
+    progress_markers = 1/40:1/40:1;
 
-    for i_boot = 1:n_boot
+    for i_boot = 1:settings.n_boot
         
-        if mod(i_boot,ceil(n_boot/50)) == 0
-            fprintf('%3d%s\n', round(100*i_boot/n_boot), '%');
+        if sum(i_boot/settings.n_boot>=progress_markers)>sum((i_boot-1)/settings.n_boot>=progress_markers)
+            fprintf('x');
         end
         
         VAR_sim.VAR_coeff = VAR_boot.VAR_coeff(:,:,i_boot);
@@ -156,6 +157,7 @@ function [bounds, id_recov, settings] = SVMAIV_estim(Y, Z, varargin)
 
     end
 
+    disp(' ');
     disp('...done!');
     
     

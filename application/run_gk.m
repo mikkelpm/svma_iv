@@ -22,13 +22,15 @@ data.Z = data.table{data.sample_bool, data.iv_var};     % External IV data
 
 %% SVMA-IV inference
 
+disp('*** SVMA-IV analysis ***');
+
 % Preliminaries
 addpath('../functions');        % Add folder with SVMA-IV analysis functions
 rng(2018);                      % Seed random number generator (for bootstrap)
 
 % Estimation settings (see other optional settings in "functions/SVMAIV_estim.m")
 settings = {'ic', 'aic';        % Information criterion
-            'n_boot', 1000;     % Number of bootstrap samples
+            'n_boot', 500;      % Number of bootstrap samples
             'signif', 0.1;      % Significance level
             'horiz', 1:24}';    % Horizons of FVR to report
 
@@ -75,3 +77,26 @@ for i=1:size(data.Y,2) % For each macro variable...
     grid on;
 
 end
+
+drawnow;
+
+
+%% SVAR-IV analysis for comparison (assumes invertibility)
+
+disp('*** SVAR-IV analysis ***');
+
+% Run analysis
+[~, SVARIV_FVD, SVARIV_settings_struct] = SVARIV_estim(data.Y, data.Z, settings{:});
+
+% Plot FVD
+for i=1:size(data.Y,2) % For each macro variable...
+    
+    % Plot point estimates and CIs
+    figure('Units', 'normalize', 'Position', [0.2 0.2 0.6 0.6]);
+    plot_band(SVARIV_FVD.ci.lower(:,i), SVARIV_FVD.ci.upper(:,i), SVARIV_FVD.estim(:,i), [], ...
+              plots.titles{i}, plots.xlabel, plots.ylabel, {'Point estimate', sprintf('%d%s', 100*(1-SVARIV_settings_struct.signif_level), '\% conf. interval')}, ...
+              'YLim', [0 1], 'XLim', [1 max(SVARIV_settings_struct.FVD_hor)], 'XTick', plots.xticks, 'FontSize', 18, 'TitleFontSizeMultiplier', 1.2);
+    grid on;
+    
+end
+
