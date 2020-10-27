@@ -182,7 +182,7 @@ for j = 1:3
     hold off
 end
 pos = get(gcf, 'Position');
-set(gcf, 'Position', [pos(1) pos(2) 2*pos(3) 1.5*pos(4)]);
+set(gcf, 'Position', [pos(1) pos(2) 2.1*pos(3) 1.1*pos(4)]);
 set(gcf, 'PaperPositionMode', 'auto');
 
 clear gapsize gapsize_edges j left_pos plotwidth pos
@@ -203,16 +203,15 @@ for j = 1:3
     pos(3) = plotwidth;
     set(gca,'Position', pos)
     set(gca,'FontSize',18);
+    set(gca,'TickLabelInterpreter','latex')
     hold on
     plot(settings.FVD_hor-1,SW_model.FVR(1:settings.FVD_hor(end),j),'linewidth',2,'linestyle','-','color',[0 0 0])
     plot(settings.FVD_hor-1,SVARIV.FVD(1:settings.FVD_hor(end),j),'linewidth',2,'linestyle',':','color',[0 0 0])
     set(gcf,'color','w')
     xlim([0 settings.FVD_hor(end)-1])
     ylim([0 0.8])
-    if j == 2
-    xlabel('Horizon (Quarters)','FontSize',22,'interpreter','latex')
-    end
-    title(['FVR of ',SW_model.series(j,:)],'fontsize',25,'interpreter','latex')
+    xlabel('Horizon (Quarters)','FontSize',20,'interpreter','latex')
+    title(['FVR of ',SW_model.series(j,:)],'fontsize',22,'interpreter','latex')
     if j == 2
         legend({'Truth','SVAR-IV'},'Location','North','fontsize',20,'interpreter','latex')
     end
@@ -220,9 +219,9 @@ for j = 1:3
     hold off
 end
 pos = get(gcf, 'Position');
-set(gcf, 'Position', [pos(1) pos(2) 2*pos(3) 1.25*pos(4)]);
+set(gcf, 'Position', [pos(1) pos(2) 2.1*pos(3) 1.1*pos(4)]);
 set(gcf, 'PaperPositionMode', 'auto');
-% print('SW_FG_SVARIV_FVR','-deps');
+print('SW_FG_SVARIV_FVR','-deps');
 % print('SW_FG_SVARIV_FVR','-dpng');
 
 clear gapsize gapsize_edges j left_pos plotwidth pos
