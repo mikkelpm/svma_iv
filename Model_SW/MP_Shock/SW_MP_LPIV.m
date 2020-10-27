@@ -190,14 +190,15 @@ hold on
 plot(alpha.alpha_plot.omega_grid,alpha.alpha_plot.alpha_LB_vals.^2,'linewidth',2,'linestyle','-','color',[0 0 0])
 set(gcf,'color','w')
 set(gca,'FontSize',18);
-title('Monetary Shock: Spectral Density of 2-Sided Predictor','fontsize',30,'interpreter','latex')
-xlabel('Frequency','FontSize',26,'interpreter','latex')
+set(gca,'TickLabelInterpreter','latex')
+title('Monetary Shock: Spectral Density of 2-Sided Predictor','fontsize',22,'interpreter','latex')
+xlabel('Frequency','FontSize',20,'interpreter','latex')
 xlim([0 pi])
 ylim([0.5 1])
 grid on
 hold off
 pos = get(gcf, 'Position');
-set(gcf, 'Position', [pos(1) pos(2) 1.8*pos(3) 1.2*pos(4)]);
+set(gcf, 'Position', [pos(1) pos(2) 1.1*pos(3) 1*pos(4)]);
 set(gcf, 'PaperPositionMode', 'auto');
 
 %----------------------------------------------------------------
@@ -216,24 +217,26 @@ for j = 1:3
     pos(3) = plotwidth;
     set(gca,'Position', pos)
     set(gca,'FontSize',18);
+    set(gca,'TickLabelInterpreter','latex')
     hold on
     plot(settings.FVR_hor-1,FVR.FVR_true(:,j),'linewidth',2,'linestyle','-','color',[0 0 0])
     plot(settings.FVR_hor-1,FVR.FVR_UB(:,j),'linewidth',1,'linestyle',':','color',[0 0 0])
     plot(settings.FVR_hor-1,FVR.FVR_LB(:,j),'linewidth',1,'linestyle','--','color',[0 0 0])
+    plot(settings.FVR_hor-1,0.5*FVR.FVR_LB(:,j),'linewidth',1,'linestyle','--','color',[0 0 0])
     set(gcf,'color','w')
     xlim([0 size(settings.FVR_hor,2)-1])
     limsy=get(gca,'YLim');
     ylim([0 limsy(2)])
-    xlabel('Horizon (Quarters)','FontSize',22,'interpreter','latex')
-    title(['FVR of ',SW_model.series(j,:)],'fontsize',25,'interpreter','latex')
+    xlabel('Horizon (Quarters)','FontSize',20,'interpreter','latex')
+    title(['FVR of ',SW_model.series(j,:)],'fontsize',22,'interpreter','latex')
     if j == 2
-        legend({'Truth','Upper Bound','Lower Bound'},'Location','South','fontsize',16,'interpreter','latex')
+        legend({'Truth','Upper Bound','Lower Bounds'},'Location','South','fontsize',20,'interpreter','latex')
     end
     grid on
     hold off
 end
 pos = get(gcf, 'Position');
-set(gcf, 'Position', [pos(1) pos(2) 2*pos(3) 1.5*pos(4)]);
+set(gcf, 'Position', [pos(1) pos(2) 2.1*pos(3) 1.1*pos(4)]);
 set(gcf, 'PaperPositionMode', 'auto');
 
 clear gapsize gapsize_edges j left_pos plotwidth pos
@@ -254,23 +257,25 @@ for j = 1:3
     pos(3) = plotwidth;
     set(gca,'Position', pos)
     set(gca,'FontSize',18);
+    set(gca,'TickLabelInterpreter','latex')
     hold on
     plot(settings.FVD_hor-1,SW_model.FVD(:,j),'linewidth',2,'linestyle','-','color',[0 0 0])
     plot(settings.FVD_hor-1,FVD.FVD_LB(:,j),'linewidth',1,'linestyle','--','color',[0 0 0])
+    plot(settings.FVD_hor-1,0.5*FVD.FVD_LB(:,j),'linewidth',1,'linestyle','--','color',[0 0 0])
     set(gcf,'color','w')
     xlim([0 size(settings.FVD_hor,2)-1])
     limsy=get(gca,'YLim');
     ylim([0 limsy(2)])
-    xlabel('Horizon (Quarters)','FontSize',22,'interpreter','latex')
-    title(['FVD of ',SW_model.series(j,:)],'fontsize',25,'interpreter','latex')
+    xlabel('Horizon (Quarters)','FontSize',20,'interpreter','latex')
+    title(['FVD of ',SW_model.series(j,:)],'fontsize',22,'interpreter','latex')
     if j == 2
-        legend({'Truth','Lower Bound'},'Location','South','fontsize',16,'interpreter','latex')
+        legend({'Truth','Lower Bounds'},'Location','South','fontsize',20,'interpreter','latex')
     end
     grid on
     hold off
 end
 pos = get(gcf, 'Position');
-set(gcf, 'Position', [pos(1) pos(2) 2*pos(3) 1.5*pos(4)]);
+set(gcf, 'Position', [pos(1) pos(2) 2.1*pos(3) 1.1*pos(4)]);
 set(gcf, 'PaperPositionMode', 'auto');
 
 clear gapsize gapsize_edges j left_pos plotwidth pos

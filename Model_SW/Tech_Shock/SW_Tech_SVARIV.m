@@ -182,7 +182,7 @@ for j = 1:3
     hold off
 end
 pos = get(gcf, 'Position');
-set(gcf, 'Position', [pos(1) pos(2) 2*pos(3) 1.5*pos(4)]);
+set(gcf, 'Position', [pos(1) pos(2) 2.1*pos(3) 1.1*pos(4)]);
 set(gcf, 'PaperPositionMode', 'auto');
 
 clear gapsize gapsize_edges j left_pos plotwidth pos
@@ -218,7 +218,7 @@ for j = 1:3
     hold off
 end
 pos = get(gcf, 'Position');
-set(gcf, 'Position', [pos(1) pos(2) 2*pos(3) 1.5*pos(4)]);
+set(gcf, 'Position', [pos(1) pos(2) 2.1*pos(3) 1.1*pos(4)]);
 set(gcf, 'PaperPositionMode', 'auto');
 
 clear gapsize gapsize_edges j left_pos plotwidth pos
