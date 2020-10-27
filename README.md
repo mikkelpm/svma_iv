@@ -17,7 +17,7 @@ Tested in: Matlab R2020a on Windows 10 PC (64-bit)
 - [run_gk.m](application/run_gk.m): example based on Gertler & Karadi (2015)
 
 **[illustration](illustration):** Numerical illustration
-- [run_sw.m](application/run_sw.m): SVMA-IV and SVAR-IV analysis of Smets & Wouters (2007) model
+- [run_sw.m](illustration/run_sw.m): SVMA-IV and SVAR-IV analysis of Smets & Wouters (2007) model
 
 **[simulations](simulations):** Simulation study
 
