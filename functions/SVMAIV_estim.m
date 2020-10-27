@@ -123,6 +123,7 @@ function [bounds, id_recov, settings] = SVMAIV_estim(Y, Z, varargin)
     disp('Getting the OLS point estimates of the identified sets...');
     yzt_aux    = get2ndmoments_VAR(VAR_OLS,dataobj,settings);
     bounds_OLS = get_IS(yzt_aux,dataobj,settings);
+    bounds_OLS = rmfield(bounds_OLS, 'alpha_plot');
     disp('...done!');
     
     

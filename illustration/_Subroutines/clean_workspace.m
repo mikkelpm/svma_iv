@@ -6,7 +6,7 @@ clear a b bayestopt_ calfa cbeta cf cfc cg cgy chabb cindp cindw clandaw cmap cm
     qs rk rkf rrf spinf sw tic0 var_list_ wf yf ys0_ zcap zcapf y r w lab inve pinf c ...
     data_raw decision M_ z_ext sigma_a sigma_b sigma_g sigma_m sigma_nu_ext sigma_pinf sigma_qs sigma_w alpha_ext
 
-if strcmp(SW_model.shock,'FG_shock')
+if strcmp(SW_model.shock,'fg')
     
    clear AUX_EXO_LAG_34_0 AUX_EXO_LAG_34_1
    

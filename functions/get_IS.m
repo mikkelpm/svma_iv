@@ -6,7 +6,7 @@ bounds = struct;
 % Alpha
 %----------------------------------------------------------------
 
-[bounds.alpha_LB,bounds.alpha_UB,~,~] = alpha_IS(yzt_aux,model,settings);
+[bounds.alpha_LB,bounds.alpha_UB,bounds.alpha_true,bounds.alpha_plot] = alpha_IS(yzt_aux,model,settings);
 alpha.alpha_LB = bounds.alpha_LB;
 alpha.alpha_UB = bounds.alpha_UB;
 if isfield(model,'alpha')
@@ -23,7 +23,7 @@ end
 
 if settings.CI_for_R2_inv == 1
 
-[bounds.R2_inv_LB,bounds.R2_inv_UB,~] = R2_IS(yzt_aux,model,settings,1,alpha);
+[bounds.R2_inv_LB,bounds.R2_inv_UB,bounds.R2_inv_true] = R2_IS(yzt_aux,model,settings,1,alpha);
 
 else
     
@@ -36,7 +36,7 @@ end
 
 if settings.CI_for_R2_recov == 1
 
-[bounds.R2_recov_LB,bounds.R2_recov_UB,~] = R2_IS(yzt_aux,model,settings,round(settings.VMA_hor/2)-1,alpha); % use exactly same bound as for two-sided alpha recoverability computation
+[bounds.R2_recov_LB,bounds.R2_recov_UB,bounds.R2_recov_true] = R2_IS(yzt_aux,model,settings,round(settings.VMA_hor/2)-1,alpha); % use exactly same bound as for two-sided alpha recoverability computation
 
 else
     
@@ -52,7 +52,7 @@ end
 
 if settings.CI_for_FVR == 1
     
-[bounds.FVR_LB,bounds.FVR_UB,~] = FVR_IS(yzt_aux,model,settings,alpha);
+[bounds.FVR_LB,bounds.FVR_UB,bounds.FVR_true] = FVR_IS(yzt_aux,model,settings,alpha);
 
 else
     
