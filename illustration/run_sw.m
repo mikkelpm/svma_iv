@@ -1,6 +1,6 @@
 clear all;
 addpath('../functions');
-addpath('_Subroutines');
+addpath('_auxiliary_functions');
 
 % Illustration of SVMA-IV identification bounds
 % in Smets-Wouters (2007) DSGE model
@@ -50,7 +50,7 @@ end
 %% Solve model and collect properties
 
 % Run Dynare
-cd('_Subroutines');
+cd('_auxiliary_functions');
 dynare(strcat('sw_', plots.shock, '_shock'), 'noclearall');
 save_polfunction;
 clean_folder;
