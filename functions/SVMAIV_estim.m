@@ -1,4 +1,4 @@
-function [bounds, id_recov, inv_test, settings] = SVMAIV_estim(Y, Z, varargin)
+function [bounds, id_recov, inv_test, settings, VAR_OLS] = SVMAIV_estim(Y, Z, varargin)
 
     % Inference routines for SVMA-IV analysis
     % Point estimates and bootstrap confidence intervals for identification bounds
@@ -24,7 +24,8 @@ function [bounds, id_recov, inv_test, settings] = SVMAIV_estim(Y, Z, varargin)
     %                   - field "pval" contains p-values
     %                   - subfield "all" is joint test in all y equations
     %                   - subfield "eqns" treats each y equation separately
-    % settings  struct  Settings structure (see below)
+    % settings  struct  Settings (see below)
+    % VAR_OLS   struct  Estimated reduced-form VAR
     
     % Parameter names in output:
     % alpha     scale parameter
@@ -54,6 +55,7 @@ function [bounds, id_recov, inv_test, settings] = SVMAIV_estim(Y, Z, varargin)
     addParameter(ip, 'compute_FVD', true, @islogical);      % bool      Compute Forecast Variance Decomposition? (default: yes)
     addParameter(ip, 'horiz', 1:24, @isnumeric);            % 1 x k     Horizons of FVR/FVD to report (default: 1:24)
     addParameter(ip, 'ci_param', false, @islogical);        % bool      Compute confidence intervals for parameters themselves (not identified sets)? (default: no)
+    addParameter(ip, 'verbose', true, @islogical);          % bool      Print progress to screen?
     
     % Optional inputs: inference/bootstrap
     addParameter(ip, 'signif', 0.1, @isnumeric);            % 1 x 1     Significance level (default: 10%)
@@ -114,9 +116,9 @@ function [bounds, id_recov, inv_test, settings] = SVMAIV_estim(Y, Z, varargin)
     settings.T = size(dataobj.data.x,1);
 
     % Estimate VAR
-    disp('Estimating the VAR...');
+    disp_verbose('Estimating the VAR...', ip.Results.verbose);
     VAR_OLS = estimateVAR(dataobj.data.x,settings); 
-    disp('...done!');
+    disp_verbose('...done!', ip.Results.verbose);
 
     
     %% Pre-test for invertibility
@@ -126,18 +128,18 @@ function [bounds, id_recov, inv_test, settings] = SVMAIV_estim(Y, Z, varargin)
     
     %% Bootstrap VAR
     
-    disp('Bootstrapping the VAR...');
+    disp_verbose('Bootstrapping the VAR...', ip.Results.verbose);
     VAR_boot = bootstrapVAR(VAR_OLS,dataobj,dataobj.data,settings);
-    disp('...done!');
+    disp_verbose('...done!', ip.Results.verbose);
     
     
     %% Bound point estimates
     
-    disp('Getting the OLS point estimates of the identified sets...');
+    disp_verbose('Getting the OLS point estimates of the identified sets...', ip.Results.verbose);
     yzt_aux    = get2ndmoments_VAR(VAR_OLS,dataobj,settings);
     bounds_OLS = get_IS(yzt_aux,dataobj,settings);
     bounds_OLS = rmfield(bounds_OLS, 'alpha_plot');
-    disp('...done!');
+    disp_verbose('...done!', ip.Results.verbose);
     
     
     %% Compute bounds for each bootstrap iteration
@@ -149,13 +151,13 @@ function [bounds, id_recov, inv_test, settings] = SVMAIV_estim(Y, Z, varargin)
         bounds_boot.(fields{j}) = NaN([size(bounds_OLS.(fields{j})) settings.n_boot]);
     end
     
-    disp('Mapping each bootstrap draw into objects of interest...');
-    fprintf(strcat(repmat('%4d',1,10), '%s\n'), 10:10:100, '%');
+    disp_verbose('Mapping each bootstrap draw into objects of interest...', ip.Results.verbose);
+    disp_verbose(sprintf(strcat(repmat('%4d',1,10), '%s\n'), 10:10:100, '%'), ip.Results.verbose);
     progress_markers = 1/40:1/40:1;
 
     for i_boot = 1:settings.n_boot
         
-        if sum(i_boot/settings.n_boot>=progress_markers)>sum((i_boot-1)/settings.n_boot>=progress_markers)
+        if ip.Results.verbose && sum(i_boot/settings.n_boot>=progress_markers)>sum((i_boot-1)/settings.n_boot>=progress_markers)
             fprintf('x');
         end
         
@@ -171,15 +173,15 @@ function [bounds, id_recov, inv_test, settings] = SVMAIV_estim(Y, Z, varargin)
 
     end
 
-    disp(' ');
-    disp('...done!');
+    disp_verbose(' ', ip.Results.verbose);
+    disp_verbose('...done!', ip.Results.verbose);
     
     
     %% Construct CIs
     
-    disp('Constructing the confidence intervals...');
+    disp_verbose('Constructing the confidence intervals...', ip.Results.verbose);
     [CI.bounds_CI_IS,CI.bounds_CI_para] = CI_fun(bounds_boot,bounds_OLS,settings);
-    disp('...done!');
+    disp_verbose('...done!', ip.Results.verbose);
     
     
     %% Collect results

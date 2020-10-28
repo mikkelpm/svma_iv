@@ -67,16 +67,17 @@ fields = fieldnames(model);
 for i_f=1:length(fields)
     disp([fields{i_f}, ' = ', num2str(model.(fields{i_f}))]);
 end
-clear fields;
+clearvars fields i_f;
 
 
 %% ABCD representation
 
 % Model parameters
 model.Xi_1      = [model.rho_y 0; 0.5 0.5];
-for ip=2:4
-    model.(sprintf('%s%d','Xi_',ip)) = (ip<=model.p)/ip^2*model.Xi_1;
+for i_p=2:4
+    model.(sprintf('%s%d','Xi_',i_p)) = (i_p<=model.p)/i_p^2*model.Xi_1;
 end
+clearvars i_p;
 model.Theta_0   = chol([1 0.8; 0.8 1],'lower');
 model.Theta_1   = model.zeta * model.Theta_0;
 model.Psi_1     = model.rho_z;
@@ -145,15 +146,17 @@ disp('...done!');
 %% Monte Carlo loop
 
 % Parallel computing object
+delete(gcp('nocreate'));
 num_workers = str2num(getenv('SLURM_CPUS_PER_TASK'));
 if ~isempty(num_workers)
     poolobj = parpool('local', num_workers);
 else
     poolobj = parpool('local');
 end
-clear num_workers;
+clearvars num_workers;
 
 % Results arrays
+laglengths = nan(1,mcmc.n_rep);
 svma_alpha_cis = nan(2,mcmc.n_rep);
 svma_R2_inv_cis = nan(2,mcmc.n_rep);
 svma_FVR_cis = nan(length(settings.FVR_hor),model.n_y,2,mcmc.n_rep);
@@ -174,7 +177,8 @@ parfor i_MC = 1:mcmc.n_rep
     the_data = simulate_data(model,settings);
 
     % SVMA-IV inference
-    the_bounds = SVMAIV_estim(the_data.y, the_data.z, ...
+    [the_bounds,~,~,~,the_VAR_OLS] ...
+        = SVMAIV_estim(the_data.y, the_data.z, ...
                       'ic', settings.ic, ...
                       'n_boot', settings.n_boot, ...
                       'signif', settings.signif, ...
@@ -184,16 +188,19 @@ parfor i_MC = 1:mcmc.n_rep
                       'ci_param', false, ...
                       'optim_opts', [], ...
                       'use_kalman', settings.use_kalman, ...
-                      'VMA_hor', settings.VMA_hor);
+                      'VMA_hor', settings.VMA_hor, ...
+                      'verbose', false);
     
     % SVAR-IV inference
     [~,the_svar_FVD] = SVARIV_estim(the_data.y, the_data.z, ...
-                      'ic', settings.ic, ...
+                      'p', the_VAR_OLS.laglength, ... % Same lag length as SVMA procedure
                       'n_boot', settings.n_boot, ...
                       'signif', settings.signif, ...
-                      'horiz', settings.FVR_hor);
+                      'horiz', settings.FVR_hor, ...
+                      'verbose', false);
     
     % Store results
+    laglengths(i_MC)            = the_VAR_OLS.laglength;
     svma_alpha_cis(:,i_MC)      = [the_bounds.ci.lower.alpha, the_bounds.ci.upper.alpha];
     svma_R2_inv_cis(:,i_MC)     = [the_bounds.ci.lower.R2_inv, the_bounds.ci.upper.R2_inv];
     svma_FVR_cis(:,:,:,i_MC)    = cat(3,the_bounds.ci.lower.FVR, the_bounds.ci.upper.FVR);
@@ -213,6 +220,8 @@ disp('...done!');
 
 disp('Elapsed minutes:');
 disp(elapsed_time/60);
+
+clearvars timer;
 
 
 %% Save results
