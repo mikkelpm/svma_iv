@@ -108,23 +108,6 @@ disp('Getting the VAR representation...')
 VAR_pop     = popVAR(SW_model,settings);
 disp('...done!')
 
-% Save path of R^2 for forward guidance shock
-
-if strcmp(SW_model.shock,'fg')
-    R2_FG = NaN(settings.VMA_hor,1);
-    for i = 1:settings.VMA_hor
-        R2_FG(i) = sum(SW_model.tot_weights(1,1:i));
-    end
-    if size(SW_model.obs_y,2) == 7
-        R2_FG_7 = R2_FG;
-        save R2_FG_7 R2_FG_7
-    elseif size(SW_model.obs_y,2) == 3
-        R2_FG_3 = R2_FG;
-        save R2_FG_3 R2_FG_3
-    end
-    clear R2_FG
-end
-
 
 %% SVMA-IV analysis
 
@@ -242,7 +225,7 @@ clear gapsize gapsize_edges j left_pos plotwidth pos
 
 % dynamic R^2 path
 
-if strcmp(SW_model.shock,'fg')
+if isfile(strcat('R2_', plots.shock, '_3.mat')) && isfile(strcat('R2_', plots.shock, '_7.mat'))
     
     load R2_FG_3
     load R2_FG_7
@@ -268,6 +251,30 @@ if strcmp(SW_model.shock,'fg')
     set(gcf, 'PaperPositionMode', 'auto');
     
     clear R2_FG_3 R2_FG_7
+    
+else
+    
+    R2_shock = cumsum(SW_model.tot_weights(1,:));
+    
+    figure(4)
+    pos = get(gca, 'Position');
+    set(gca,'Position', pos)
+    set(gca,'FontSize',18);
+    set(gca,'TickLabelInterpreter','latex')
+    hold on
+    plot(settings.IRF_hor-1,R2_shock(1:settings.IRF_hor(end)),'linewidth',3.5,'linestyle','-','color',[0 0 0])
+    hold on
+    set(gcf,'color','w')
+    xlabel('Horizon (Quarters)','FontSize',20,'interpreter','latex')
+    ylim([0 1])
+    % ylabel('$R_\ell^2 \quad \quad$','fontsize',22,'interpreter','latex','Rotation',0)
+    grid on
+    hold off
+    pos = get(gcf, 'Position');
+    set(gcf, 'Position', [pos(1) pos(2) 1.5*pos(3) 1.1*pos(4)]);
+    set(gcf, 'PaperPositionMode', 'auto');
+    
+    clear R2_shock
     
 end
 
