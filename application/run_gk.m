@@ -35,7 +35,16 @@ settings = {'ic', 'aic';        % Information criterion
             'horiz', 1:24}';    % Horizons of FVR to report
 
 % Run inference routines
-[bounds, id_recov, settings_struct] = SVMAIV_estim(data.Y, data.Z, settings{:});
+[bounds, id_recov, inv_test, settings_struct] = SVMAIV_estim(data.Y, data.Z, settings{:});
+
+
+%% Display pre-test for invertibility
+
+disp('Invertibility pre-test p-value: all equations jointly');
+disp(inv_test.pval.all);
+
+disp('Invertibility pre-test p-value: each equation separately');
+disp(inv_test.pval.eqns);
 
 
 %% Display bounds on alpha and degree of invertibility/recoverability
