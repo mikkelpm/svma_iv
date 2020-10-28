@@ -15,7 +15,7 @@ plots.shock             = 'mp'; % Either 'mp' (monetary policy), 'tech' (technol
 settings.set_obsvars    = 1;    % Set of observables (see below for details)
 
 % Plot settings
-plots.iv_strength       = 0.5;  % Relative scale parameter for second IV in plot
+plots.iv_strength       = 0.5;  % Relative strength of second IV in plot
 
 
 %% Numerical settings
@@ -99,21 +99,10 @@ clean_workspace;
 
 [SW_model.IRF,SW_model.FVD,SW_model.M,SW_model.tot_weights] = pop_analysis(SW_model,settings);
 
-% Save path of R^2 for forward guidance shock
-
-if strcmp(SW_model.shock,'fg')
-    R2_fg = NaN(settings.VMA_hor,1);
-    for i = 1:settings.VMA_hor
-        R2_fg(i) = sum(SW_model.tot_weights(1,1:i));
-    end
-    if size(SW_model.obs_y,2) == 7
-        R2_fg_7 = R2_fg;
-        save R2_fg_7 R2_fg_7
-    elseif size(SW_model.obs_y,2) == 3
-        R2_fg_3 = R2_fg;
-        save R2_fg_3 R2_fg_3
-    end
-    clear R2_fg
+% Path of R^2
+R2_shock = cumsum(SW_model.tot_weights(1,:));
+if strcmp(SW_model.shock,'fg') && settings.set_obsvars == 1 % Save for forward guidance shock with small set of observables
+    save R2_fg_obsvars1 R2_shock;
 end
 
 disp('...done!')
@@ -149,7 +138,7 @@ disp('Plotting results...')
 
 % Scale parameter alpha
 
-figure(1)
+figure;
 hold on
 plot(bounds_pop.alpha_plot.omega_grid,bounds_pop.alpha_plot.alpha_LB_vals.^2,'linewidth',2,'linestyle','-','color',[0 0 0])
 set(gcf,'color','w')
@@ -171,8 +160,8 @@ plotwidth = 0.275;
 gapsize = 0.05;
 gapsize_edges = (1-3*plotwidth-2*gapsize)/2;
 left_pos = [gapsize_edges, gapsize_edges + gapsize + plotwidth, gapsize_edges + 2*gapsize + 2*plotwidth];
+figure;
 for j = 1:3
-    figure(2)
     subplot(1,3,j)
     pos = get(gca, 'Position');
     pos(1) = left_pos(j);
@@ -209,8 +198,8 @@ plotwidth = 0.275;
 gapsize = 0.05;
 gapsize_edges = (1-3*plotwidth-2*gapsize)/2;
 left_pos = [gapsize_edges, gapsize_edges + gapsize + plotwidth, gapsize_edges + 2*gapsize + 2*plotwidth];
+figure;
 for j = 1:3
-    figure(3)
     subplot(1,3,j)
     pos = get(gca, 'Position');
     pos(1) = left_pos(j);
@@ -242,58 +231,27 @@ clear gapsize gapsize_edges j left_pos plotwidth pos limsy
 
 % dynamic R^2 path
 
-if isfile(strcat('R2_', plots.shock, '_3.mat')) && isfile(strcat('R2_', plots.shock, '_7.mat'))
-    
-    load R2_fg_3
-    load R2_fg_7
-    
-    figure(4)
-    pos = get(gca, 'Position');
-    set(gca,'Position', pos)
-    set(gca,'FontSize',18);
-    set(gca,'TickLabelInterpreter','latex')
+figure;
+pos = get(gca, 'Position');
+set(gca,'Position', pos)
+set(gca,'FontSize',18);
+set(gca,'TickLabelInterpreter','latex')
+plot(settings.IRF_hor-1,R2_shock(1:settings.IRF_hor(end)),'linewidth',3.5,'linestyle','-','color',[0 0 0])
+if strcmp(plots.shock,'fg') && settings.set_obsvars==4 && isfile('R2_fg_obsvars1.mat')
+    % Forward guidance shock: Also plot R^2 path for full set of observables
+    R2_fg_obsvars1 = load('R2_fg_obsvars1');
     hold on
-    plot(settings.IRF_hor-1,R2_fg_7(1:settings.IRF_hor(end)),'linewidth',3.5,'linestyle','-','color',[0 0 0])
-    hold on
-    plot(settings.IRF_hor-1,R2_fg_3(1:settings.IRF_hor(end)),'linewidth',3.5,'linestyle','--','color',[0 0 0])
-    hold on
-    set(gcf,'color','w')
-    xlabel('Horizon (Quarters)','FontSize',20,'interpreter','latex')
-    % ylabel('$R_\ell^2 \quad \quad$','fontsize',22,'interpreter','latex','Rotation',0)
+    plot(settings.IRF_hor-1,R2_fg_obsvars1.R2_shock(1:settings.IRF_hor(end)),'linewidth',3.5,'linestyle','--','color',[0 0 0])
+    hold off
     legend({'7 Observables','3 Observables'},'Location','East','fontsize',20,'interpreter','latex')
-    grid on
-    hold off
-    pos = get(gcf, 'Position');
-    set(gcf, 'Position', [pos(1) pos(2) 1.5*pos(3) 1.1*pos(4)]);
-    set(gcf, 'PaperPositionMode', 'auto');
-    
-    clear R2_fg_3 R2_fg_7
-    
-else
-    
-    R2_shock = cumsum(SW_model.tot_weights(1,:));
-    
-    figure(4)
-    pos = get(gca, 'Position');
-    set(gca,'Position', pos)
-    set(gca,'FontSize',18);
-    set(gca,'TickLabelInterpreter','latex')
-    hold on
-    plot(settings.IRF_hor-1,R2_shock(1:settings.IRF_hor(end)),'linewidth',3.5,'linestyle','-','color',[0 0 0])
-    hold on
-    set(gcf,'color','w')
-    xlabel('Horizon (Quarters)','FontSize',20,'interpreter','latex')
-    ylim([0 1])
-    % ylabel('$R_\ell^2 \quad \quad$','fontsize',22,'interpreter','latex','Rotation',0)
-    grid on
-    hold off
-    pos = get(gcf, 'Position');
-    set(gcf, 'Position', [pos(1) pos(2) 1.5*pos(3) 1.1*pos(4)]);
-    set(gcf, 'PaperPositionMode', 'auto');
-    
-    clear R2_shock
-    
 end
+set(gcf,'color','w')
+xlabel('Horizon (Quarters)','FontSize',20,'interpreter','latex')
+% ylabel('$R_\ell^2 \quad \quad$','fontsize',22,'interpreter','latex','Rotation',0)
+grid on
+pos = get(gcf, 'Position');
+set(gcf, 'Position', [pos(1) pos(2) 1.5*pos(3) 1.1*pos(4)]);
+set(gcf, 'PaperPositionMode', 'auto');
 
 disp('...done!')
 
@@ -319,8 +277,8 @@ plotwidth = 0.275;
 gapsize = 0.05;
 gapsize_edges = (1-3*plotwidth-2*gapsize)/2;
 left_pos = [gapsize_edges, gapsize_edges + gapsize + plotwidth, gapsize_edges + 2*gapsize + 2*plotwidth];
+figure;
 for j = 1:3
-    figure(5)
     subplot(1,3,j)
     pos = get(gca, 'Position');
     pos(1) = left_pos(j);
@@ -353,8 +311,8 @@ plotwidth = 0.275;
 gapsize = 0.05;
 gapsize_edges = (1-3*plotwidth-2*gapsize)/2;
 left_pos = [gapsize_edges, gapsize_edges + gapsize + plotwidth, gapsize_edges + 2*gapsize + 2*plotwidth];
+figure;
 for j = 1:3
-    figure(6)
     subplot(1,3,j)
     pos = get(gca, 'Position');
     pos(1) = left_pos(j);
