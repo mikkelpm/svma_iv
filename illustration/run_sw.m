@@ -99,6 +99,23 @@ clean_workspace;
 
 [SW_model.IRF,SW_model.FVD,SW_model.M,SW_model.tot_weights] = pop_analysis(SW_model,settings);
 
+% Save path of R^2 for forward guidance shock
+
+if strcmp(SW_model.shock,'fg')
+    R2_fg = NaN(settings.VMA_hor,1);
+    for i = 1:settings.VMA_hor
+        R2_fg(i) = sum(SW_model.tot_weights(1,1:i));
+    end
+    if size(SW_model.obs_y,2) == 7
+        R2_fg_7 = R2_fg;
+        save R2_fg_7 R2_fg_7
+    elseif size(SW_model.obs_y,2) == 3
+        R2_fg_3 = R2_fg;
+        save R2_fg_3 R2_fg_3
+    end
+    clear R2_fg
+end
+
 disp('...done!')
 
 
@@ -184,7 +201,7 @@ pos = get(gcf, 'Position');
 set(gcf, 'Position', [pos(1) pos(2) 2.1*pos(3) 1.1*pos(4)]);
 set(gcf, 'PaperPositionMode', 'auto');
 
-clear gapsize gapsize_edges j left_pos plotwidth pos
+clear gapsize gapsize_edges j left_pos plotwidth pos limsy
 
 % FVD
 
@@ -221,14 +238,14 @@ pos = get(gcf, 'Position');
 set(gcf, 'Position', [pos(1) pos(2) 2.1*pos(3) 1.1*pos(4)]);
 set(gcf, 'PaperPositionMode', 'auto');
 
-clear gapsize gapsize_edges j left_pos plotwidth pos
+clear gapsize gapsize_edges j left_pos plotwidth pos limsy
 
 % dynamic R^2 path
 
 if isfile(strcat('R2_', plots.shock, '_3.mat')) && isfile(strcat('R2_', plots.shock, '_7.mat'))
     
-    load R2_FG_3
-    load R2_FG_7
+    load R2_fg_3
+    load R2_fg_7
     
     figure(4)
     pos = get(gca, 'Position');
@@ -236,9 +253,9 @@ if isfile(strcat('R2_', plots.shock, '_3.mat')) && isfile(strcat('R2_', plots.sh
     set(gca,'FontSize',18);
     set(gca,'TickLabelInterpreter','latex')
     hold on
-    plot(settings.IRF_hor-1,R2_FG_7(1:settings.IRF_hor(end)),'linewidth',3.5,'linestyle','-','color',[0 0 0])
+    plot(settings.IRF_hor-1,R2_fg_7(1:settings.IRF_hor(end)),'linewidth',3.5,'linestyle','-','color',[0 0 0])
     hold on
-    plot(settings.IRF_hor-1,R2_FG_3(1:settings.IRF_hor(end)),'linewidth',3.5,'linestyle','--','color',[0 0 0])
+    plot(settings.IRF_hor-1,R2_fg_3(1:settings.IRF_hor(end)),'linewidth',3.5,'linestyle','--','color',[0 0 0])
     hold on
     set(gcf,'color','w')
     xlabel('Horizon (Quarters)','FontSize',20,'interpreter','latex')
@@ -250,7 +267,7 @@ if isfile(strcat('R2_', plots.shock, '_3.mat')) && isfile(strcat('R2_', plots.sh
     set(gcf, 'Position', [pos(1) pos(2) 1.5*pos(3) 1.1*pos(4)]);
     set(gcf, 'PaperPositionMode', 'auto');
     
-    clear R2_FG_3 R2_FG_7
+    clear R2_fg_3 R2_fg_7
     
 else
     
@@ -363,7 +380,7 @@ pos = get(gcf, 'Position');
 set(gcf, 'Position', [pos(1) pos(2) 2.1*pos(3) 1.1*pos(4)]);
 set(gcf, 'PaperPositionMode', 'auto');
 
-clear gapsize gapsize_edges j left_pos plotwidth pos
+clear gapsize gapsize_edges j left_pos plotwidth pos i
 
 disp('...done!')
 
