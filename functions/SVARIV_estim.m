@@ -9,7 +9,9 @@ function [IRF, FVD, settings] = SVARIV_estim(Y, Z, varargin)
     % IRF       struct  Estimation results for absolute impulse responses
     %                   - field "estim": point estimates
     %                   - field "ci": bootstrap confidence intervals
-    % FVD       struct  
+    % FVD       struct  Estimation results for Forecast Variance Decompositions
+    %                   - field "estim": point estimates
+    %                   - field "ci": bootstrap confidence intervals
     % settings  struct  Settings structure (see below)
     
     

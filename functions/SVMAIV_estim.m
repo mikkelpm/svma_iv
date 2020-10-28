@@ -58,7 +58,7 @@ function [bounds, id_recov, inv_test, settings] = SVMAIV_estim(Y, Z, varargin)
     % Optional inputs: inference/bootstrap
     addParameter(ip, 'signif', 0.1, @isnumeric);            % 1 x 1     Significance level (default: 10%)
     addParameter(ip, 'n_boot', 1000, @isnumeric);           % 1 x 1     No. of bootstrap repetitions (default: 1000)
-    addParameter(ip, 'optim_opts', optimoptions('fmincon', 'Display', 'notify'), @isobject); % obj  Numerical options for Stoye CI construction
+    addParameter(ip, 'optim_opts', optimoptions('fmincon', 'Display', 'notify'), @(x) isobject(x) | isempty(x)); % obj  Numerical options for Stoye CI construction
     
     % Optional inputs: numerical settings
     addParameter(ip, 'use_kalman', true, @islogical);       % bool      Use Kalman filter for conditional variance calculations? (default: true)
