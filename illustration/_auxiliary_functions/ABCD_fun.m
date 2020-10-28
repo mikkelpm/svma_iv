@@ -8,7 +8,7 @@ n_xi     = model.n_xi;
 obs_y    = model.obs_y;
 obs_x    = model.obs_x;
 
-if ~strcmp(model.shock,'FG_shock')
+if ~strcmp(model.shock,'fg')
 
 % ABCD representation in macro aggregates y
 
@@ -24,7 +24,7 @@ B_x = decision(n_s+1:n_s+n_xi,1:n_s); B_x = B_x';
 C_x = decision(1:n_s,obs_x); C_x = C_x';
 D_x = decision(n_s+1:n_s+n_xi,obs_x); D_x = D_x';
 
-elseif strcmp(model.shock,'FG_shock')
+elseif strcmp(model.shock,'fg')
     
 % ABCD representation in macro aggregates y
 

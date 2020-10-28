@@ -108,6 +108,23 @@ disp('Getting the VAR representation...')
 VAR_pop     = popVAR(SW_model,settings);
 disp('...done!')
 
+% Save path of R^2 for forward guidance shock
+
+if strcmp(SW_model.shock,'fg')
+    R2_FG = NaN(settings.VMA_hor,1);
+    for i = 1:settings.VMA_hor
+        R2_FG(i) = sum(SW_model.tot_weights(1,1:i));
+    end
+    if size(SW_model.obs_y,2) == 7
+        R2_FG_7 = R2_FG;
+        save R2_FG_7 R2_FG_7
+    elseif size(SW_model.obs_y,2) == 3
+        R2_FG_3 = R2_FG;
+        save R2_FG_3 R2_FG_3
+    end
+    clear R2_FG
+end
+
 
 %% SVMA-IV analysis
 
@@ -223,6 +240,37 @@ set(gcf, 'PaperPositionMode', 'auto');
 
 clear gapsize gapsize_edges j left_pos plotwidth pos
 
+% dynamic R^2 path
+
+if strcmp(SW_model.shock,'fg')
+    
+    load R2_FG_3
+    load R2_FG_7
+    
+    figure(4)
+    pos = get(gca, 'Position');
+    set(gca,'Position', pos)
+    set(gca,'FontSize',18);
+    set(gca,'TickLabelInterpreter','latex')
+    hold on
+    plot(settings.IRF_hor-1,R2_FG_7(1:settings.IRF_hor(end)),'linewidth',3.5,'linestyle','-','color',[0 0 0])
+    hold on
+    plot(settings.IRF_hor-1,R2_FG_3(1:settings.IRF_hor(end)),'linewidth',3.5,'linestyle','--','color',[0 0 0])
+    hold on
+    set(gcf,'color','w')
+    xlabel('Horizon (Quarters)','FontSize',20,'interpreter','latex')
+    % ylabel('$R_\ell^2 \quad \quad$','fontsize',22,'interpreter','latex','Rotation',0)
+    legend({'7 Observables','3 Observables'},'Location','East','fontsize',20,'interpreter','latex')
+    grid on
+    hold off
+    pos = get(gcf, 'Position');
+    set(gcf, 'Position', [pos(1) pos(2) 1.5*pos(3) 1.1*pos(4)]);
+    set(gcf, 'PaperPositionMode', 'auto');
+    
+    clear R2_FG_3 R2_FG_7
+    
+end
+
 disp('...done!')
 
 
@@ -248,22 +296,23 @@ gapsize = 0.05;
 gapsize_edges = (1-3*plotwidth-2*gapsize)/2;
 left_pos = [gapsize_edges, gapsize_edges + gapsize + plotwidth, gapsize_edges + 2*gapsize + 2*plotwidth];
 for j = 1:3
-    figure(4)
+    figure(5)
     subplot(1,3,j)
     pos = get(gca, 'Position');
     pos(1) = left_pos(j);
     pos(3) = plotwidth;
     set(gca,'Position', pos)
     set(gca,'FontSize',18);
+    set(gca,'TickLabelInterpreter','latex')
     hold on
     plot(settings.IRF_hor-1,SW_model.IRF(1:settings.IRF_hor(end),j),'linewidth',2,'linestyle','-','color',[0 0 0])
     plot(settings.IRF_hor-1,SVARIV.IRF(1:settings.IRF_hor(end),j),'linewidth',2,'linestyle',':','color',[0 0 0])
     set(gcf,'color','w')
     xlim([0 settings.IRF_hor(end)-1])
-    xlabel('Horizon (Quarters)','FontSize',22,'interpreter','latex')
-    title(['IRF of ',SW_model.series(j,:)],'fontsize',25,'interpreter','latex')
+    xlabel('Horizon (Quarters)','FontSize',20,'interpreter','latex')
+    title(['IRF of ',SW_model.series(j,:)],'fontsize',22,'interpreter','latex')
     if j == 2
-        legend({'Truth','SVAR-IV'},'Location','South','fontsize',16,'interpreter','latex')
+        legend({'Truth','SVAR-IV'},'Location','South','fontsize',20,'interpreter','latex')
     end
     grid on
     hold off
@@ -281,23 +330,24 @@ gapsize = 0.05;
 gapsize_edges = (1-3*plotwidth-2*gapsize)/2;
 left_pos = [gapsize_edges, gapsize_edges + gapsize + plotwidth, gapsize_edges + 2*gapsize + 2*plotwidth];
 for j = 1:3
-    figure(5)
+    figure(6)
     subplot(1,3,j)
     pos = get(gca, 'Position');
     pos(1) = left_pos(j);
     pos(3) = plotwidth;
     set(gca,'Position', pos)
     set(gca,'FontSize',18);
+    set(gca,'TickLabelInterpreter','latex')
     hold on
     plot(settings.FVD_hor-1,SW_model.FVR(1:settings.FVD_hor(end),j),'linewidth',2,'linestyle','-','color',[0 0 0])
     plot(settings.FVD_hor-1,SVARIV.FVD(1:settings.FVD_hor(end),j),'linewidth',2,'linestyle',':','color',[0 0 0])
     set(gcf,'color','w')
     xlim([0 settings.FVD_hor(end)-1])
     ylim([0 1])
-    xlabel('Horizon (Quarters)','FontSize',22,'interpreter','latex')
-    title(['FVR of ',SW_model.series(j,:)],'fontsize',25,'interpreter','latex')
+    xlabel('Horizon (Quarters)','FontSize',20,'interpreter','latex')
+    title(['FVR of ',SW_model.series(j,:)],'fontsize',22,'interpreter','latex')
     if j == 2
-        legend({'Truth','SVAR-IV'},'Location','North','fontsize',16,'interpreter','latex')
+        legend({'Truth','SVAR-IV'},'Location','North','fontsize',20,'interpreter','latex')
     end
     grid on
     hold off
@@ -310,6 +360,4 @@ clear gapsize gapsize_edges j left_pos plotwidth pos
 
 disp('...done!')
 
-
 cd('..');
-

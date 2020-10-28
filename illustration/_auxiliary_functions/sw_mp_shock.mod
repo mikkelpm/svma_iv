@@ -59,7 +59,7 @@ sigma_g = 0.6752;
 sigma_qs = 0.5678;
 sigma_m = 0.2290;
 sigma_pinf = 0.2181;
-sigma_w = 0.2290;
+sigma_w = 0.2663;
 sigma_nu_ext = 1;
 alpha_ext = 1;
 
