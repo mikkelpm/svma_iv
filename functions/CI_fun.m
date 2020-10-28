@@ -48,8 +48,8 @@ for j=1:length(fields)
     
     field_LB = fields{j}; % Lower bound field
     field_UB = sprintf('%s_UB', the_param); % Upper bound field
-    bounds_CI_para.lower.(the_param) = zeros(size(bounds_OLS.(field_LB)));
-    bounds_CI_para.upper.(the_param) = zeros(size(bounds_OLS.(field_LB)));
+    bounds_CI_para.lower.(the_param) = nan(size(bounds_OLS.(field_LB)));
+    bounds_CI_para.upper.(the_param) = nan(size(bounds_OLS.(field_LB)));
     
     for l=1:size(bounds_OLS.(field_LB),1)
         for m=1:size(bounds_OLS.(field_LB),2)
@@ -63,14 +63,21 @@ for j=1:length(fields)
                   bounds_CI_IS.OLS_biascorr.(field_UB)(l,m) = max(0,bounds_CI_IS.OLS_biascorr.(field_UB)(l,m));
             end
             
-            % Compute Stoye (2009) confidence interval
-            CI = stoye_CI(bounds_CI_IS.OLS_biascorr.(field_LB)(l,m), ...
+            if ~any(strcmp(field_LB, {'FVD_LB', 'R2_recov_LB'}))
+                % Compute Stoye (2009) confidence interval
+                CI = stoye_CI(bounds_CI_IS.OLS_biascorr.(field_LB)(l,m), ...
                               bounds_CI_IS.OLS_biascorr.(field_UB)(l,m), ...
                               varcov, ...
                               signif_level, ...
                               optimopts);
-            bounds_CI_para.lower.(the_param)(l,m) = CI(1);
-            bounds_CI_para.upper.(the_param)(l,m) = CI(2);
+                bounds_CI_para.lower.(the_param)(l,m) = CI(1);
+                bounds_CI_para.upper.(the_param)(l,m) = CI(2);
+            else
+                % FVD and R2_recov: one-sided lower confidence interval,
+                % since upper bound is always 1
+                bounds_CI_para.lower.(the_param)(l,m) = bounds_CI_IS.OLS_biascorr.(field_LB)(l,m)+norminv(signif_level)*sqrt(varcov(1,1));
+                bounds_CI_para.upper.(the_param)(l,m) = 1;
+            end
             
         end    
     end
