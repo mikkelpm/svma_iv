@@ -75,6 +75,7 @@ plots.xticks = 3:3:24; % X axis ticks for FVR plot
 plots.titles = {'FVR of Federal Funds Rate', 'FVR of Industrial Production Growth', 'FVR of CPI Growth', 'FVR of Excess Bond Premium'};
 plots.xlabel = 'Horizon (Months)'; % X axis label for FVR plot
 plots.ylabel = ''; % Y axis label for FVR plot
+mkdir('figures'); % Figure output folder
 
 for i=1:size(data.Y,2) % For each macro variable...
     
@@ -84,10 +85,10 @@ for i=1:size(data.Y,2) % For each macro variable...
               plots.titles{i}, plots.xlabel, plots.ylabel, {'Estimate of identif. set', sprintf('%d%s', 100*(1-settings_struct.signif_level), '\% conf. interval for identif. set')}, ...
               'YLim', [0 1], 'XLim', [1 max(settings_struct.FVR_hor)], 'XTick', plots.xticks, 'FontSize', 18, 'TitleFontSizeMultiplier', 1.2);
     grid on;
+    drawnow;
+    save_fig('figures', strcat('svma_fvr_', data.endo_vars{i}));
 
 end
-
-drawnow;
 
 
 %% SVAR-IV analysis for comparison (assumes invertibility)
@@ -106,6 +107,8 @@ for i=1:size(data.Y,2) % For each macro variable...
               plots.titles{i}, plots.xlabel, plots.ylabel, {'Point estimate', sprintf('%d%s', 100*(1-SVARIV_settings_struct.signif_level), '\% conf. interval')}, ...
               'YLim', [0 1], 'XLim', [1 max(SVARIV_settings_struct.FVD_hor)], 'XTick', plots.xticks, 'FontSize', 18, 'TitleFontSizeMultiplier', 1.2);
     grid on;
+    drawnow;
+    save_fig('figures', strcat('svar_fvr_', data.endo_vars{i}));
     
 end
 

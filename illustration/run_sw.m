@@ -17,6 +17,10 @@ settings.set_obsvars    = 1;    % Set of observables (see below for details)
 % Plot settings
 plots.iv_strength       = 0.5;  % Relative strength of second IV in plot
 
+% File name
+plots.save_folder       = 'figures'; % Folder to save figures
+plots.save_name         = sprintf('%s%s%d', plots.shock, '_obsvars', settings.set_obsvars); % Beginning of file name for figures
+
 
 %% Numerical settings
 
@@ -134,6 +138,8 @@ bounds_pop = get_IS(yzt_aux,SW_model,settings);
 
 %% Plot SVMA-IV results
 
+mkdir(fullfile('..', plots.save_folder));
+
 disp('Plotting results...')
 
 % Scale parameter alpha
@@ -153,6 +159,7 @@ hold off
 pos = get(gcf, 'Position');
 set(gcf, 'Position', [pos(1) pos(2) 1.1*pos(3) 1*pos(4)]);
 set(gcf, 'PaperPositionMode', 'auto');
+save_fig(fullfile('..', plots.save_folder), strcat(plots.save_name, '_alpha'));
 
 % FVR
 
@@ -189,6 +196,7 @@ end
 pos = get(gcf, 'Position');
 set(gcf, 'Position', [pos(1) pos(2) 2.1*pos(3) 1.1*pos(4)]);
 set(gcf, 'PaperPositionMode', 'auto');
+save_fig(fullfile('..', plots.save_folder), strcat(plots.save_name, '_fvr'));
 
 clear gapsize gapsize_edges j left_pos plotwidth pos limsy
 
@@ -226,6 +234,7 @@ end
 pos = get(gcf, 'Position');
 set(gcf, 'Position', [pos(1) pos(2) 2.1*pos(3) 1.1*pos(4)]);
 set(gcf, 'PaperPositionMode', 'auto');
+save_fig(fullfile('..', plots.save_folder), strcat(plots.save_name, '_fvd'));
 
 clear gapsize gapsize_edges j left_pos plotwidth pos limsy
 
@@ -252,6 +261,7 @@ grid on
 pos = get(gcf, 'Position');
 set(gcf, 'Position', [pos(1) pos(2) 1.5*pos(3) 1.1*pos(4)]);
 set(gcf, 'PaperPositionMode', 'auto');
+save_fig(fullfile('..', plots.save_folder), strcat(plots.save_name, '_r2'));
 
 disp('...done!')
 
@@ -302,6 +312,7 @@ end
 pos = get(gcf, 'Position');
 set(gcf, 'Position', [pos(1) pos(2) 2.1*pos(3) 1.1*pos(4)]);
 set(gcf, 'PaperPositionMode', 'auto');
+save_fig(fullfile('..', plots.save_folder), strcat(plots.save_name, '_svar_irf'));
 
 clear gapsize gapsize_edges j left_pos plotwidth pos
 
@@ -337,6 +348,7 @@ end
 pos = get(gcf, 'Position');
 set(gcf, 'Position', [pos(1) pos(2) 2.1*pos(3) 1.1*pos(4)]);
 set(gcf, 'PaperPositionMode', 'auto');
+save_fig(fullfile('..', plots.save_folder), strcat(plots.save_name, '_svar_fvd'));
 
 clear gapsize gapsize_edges j left_pos plotwidth pos i
 
