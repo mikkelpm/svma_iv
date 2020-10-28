@@ -27,7 +27,7 @@ Tested in: Matlab R2020a on Windows 10 PC (64-bit)
 addpath('functions');
 % Given (T x n_y) data matrix Y with endogenous variables
 % and (T x 1) data vector Z with external instrument
-[bounds, id_recov] = ...
+[bounds, id_recov, inv_test] = ...
   SVMAIV_estim(Y, Z, ...
                'ic', 'aic', ...   % Select lag length using AIC
                'signif', 0.1, ... % 10% significance level
@@ -41,6 +41,10 @@ Output:
 - `id_recov` structure: results under additional assumption of recoverability
   - `id_recov.estim`: point estimates of parameters
   - `id_recov.ci`: confidence intervals for parameters
+- `inv_test` structure: pre-test for invertibility, implemented either as a Granger casuality test for all equations jointly (subfield `all`) or in each *y* equation separately (subfield `eqns`)
+  - `inv_test.wald_stat`: Wald statistics
+  - `inv_test.df`: degrees of freedom
+  - `inv_test.pval`: p-values
 
 Parameter names:
 - `alpha`: scale parameter

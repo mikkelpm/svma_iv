@@ -15,9 +15,10 @@ T_VAR  = T - p;
 % estimate VAR
 X          = lagmatrix(data,1:p);
 X          = X(p+1:end,:);
+X_expand   = [X ones(length(X),1)];
 Y          = data(p+1:end,:);
-VAR_coeff  = [X ones(length(X),1)]\Y;
-VAR_res    = Y-[X ones(length(X),1)]*VAR_coeff;
+VAR_coeff  = X_expand\Y;
+VAR_res    = Y-X_expand*VAR_coeff;
 % Sigma_u    = (VAR_res'*VAR_res)/(T_VAR-n_x*p-1);
 Sigma_u    = (VAR_res'*VAR_res)/T_VAR;
 
@@ -26,6 +27,7 @@ VAR_sim.T_VAR     = T_VAR;
 VAR_sim.VAR_coeff = VAR_coeff;
 VAR_sim.Sigma_u   = Sigma_u;
 VAR_sim.VAR_res   = VAR_res;
+VAR_sim.X         = X_expand;
 VAR_sim.laglength = p;
 
 end

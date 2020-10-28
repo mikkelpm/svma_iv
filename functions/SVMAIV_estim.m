@@ -1,4 +1,4 @@
-function [bounds, id_recov, settings] = SVMAIV_estim(Y, Z, varargin)
+function [bounds, id_recov, inv_test, settings] = SVMAIV_estim(Y, Z, varargin)
 
     % Inference routines for SVMA-IV analysis
     % Point estimates and bootstrap confidence intervals for identification bounds
@@ -18,6 +18,12 @@ function [bounds, id_recov, settings] = SVMAIV_estim(Y, Z, varargin)
     % id_recov  struct  Point identification results under assumption of recoverability:
     %                   - field "estim" contains parameter estimates (bootstrap bias-corrected)
     %                   - field "ci" contains confidence intervals
+    % inv_test struct  Granger casuality pre-test of invertibility
+    %                   - field "wald_stat" contains Wald statistics
+    %                   - field "df" contains degrees of freedom
+    %                   - field "pval" contains p-values
+    %                   - subfield "all" is joint test in all y equations
+    %                   - subfield "eqns" treats each y equation separately
     % settings  struct  Settings structure (see below)
     
     % Parameter names in output:
@@ -92,7 +98,7 @@ function [bounds, id_recov, settings] = SVMAIV_estim(Y, Z, varargin)
     settings.optimopts      = ip.Results.optim_opts;    % fmincon options for Stoye CI
     
     
-    %% Estimate and bootstrap reduced-form VAR
+    %% Estimate reduced-form VAR
     
     % Data
     Y = ip.Results.Y;
@@ -112,7 +118,14 @@ function [bounds, id_recov, settings] = SVMAIV_estim(Y, Z, varargin)
     VAR_OLS = estimateVAR(dataobj.data.x,settings); 
     disp('...done!');
 
-    % Bootstrap VAR
+    
+    %% Pre-test for invertibility
+    
+    [inv_test.wald_stat,inv_test.df,inv_test.pval] = test_invertibility(VAR_OLS);
+    
+    
+    %% Bootstrap VAR
+    
     disp('Bootstrapping the VAR...');
     VAR_boot = bootstrapVAR(VAR_OLS,dataobj,dataobj.data,settings);
     disp('...done!');
