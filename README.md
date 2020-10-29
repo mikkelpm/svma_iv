@@ -13,13 +13,13 @@ Tested in: Matlab R2020a on Windows 10 PC (64-bit)
 - [SVMAIV_estim.m](functions/SVMAIV_estim.m): main function for SVMA-IV inference
 - [SVARIV_estim.m](functions/SVARIV_estim.m): SVAR-IV inference (assumes invertibility)
 
-**[application](application):** Empirical example
+**[application](application):** empirical example
 - [run_gk.m](application/run_gk.m): example based on Gertler & Karadi (2015)
 
-**[illustration](illustration):** Numerical illustration
+**[illustration](illustration):** numerical illustration
 - [run_sw.m](illustration/run_sw.m): SVMA-IV and SVAR-IV analysis of Smets & Wouters (2007) model
 
-**[simulations](simulations):** Simulation study
+**[simulations](simulations):** simulation study
 - [run_sim.m](simulations/run_sim.m): run Monte Carlo experiment
 
 ## Example
