@@ -14,7 +14,6 @@ settings.FVR_hor    = [1 4];    % Horizons for FVR/FVD
 
 % MCMC settings
 mcmc.n_rep          = 5e3;      % Number of Monte Carlo repetitions
-rng(2018, 'twister');           % Seed random number generator
 rng(2018+model.dgp, 'twister'); % Seed random number generator
 
 % Inference settings
