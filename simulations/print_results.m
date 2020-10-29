@@ -2,6 +2,9 @@ clear all;
 
 % Display results of Monte Carlo study
 
+% Before running this code, execute "run_sim.m" for various choices of "model.dgp"
+% The code below uses all available simulation results
+
 
 %% Settings
 
@@ -37,6 +40,7 @@ true_FVR = nan(n_dgp,n_hor);
 cov_par_FVR = nan(n_dgp,n_hor);
 cov_set_FVR = nan(n_dgp,n_hor);
 cov_par_FVR_svar = nan(n_dgp,n_hor);
+avg_laglength = nan(n_dgp,1);
 
 cover1 = @(cis,param_lb,param_ub) mean(cis(1,:)<=param_lb & param_ub<=cis(2,:), 2);
 cover2 = @(cis,param_lb,param_ub) mean(reshape(cis(:,FVR_var,1,:)<=param_lb(:,FVR_var) & param_ub(:,FVR_var)<=cis(:,FVR_var,2,:), n_hor, []), 2);
@@ -57,6 +61,9 @@ for i_dgp=1:n_dgp % For each DGP...
     cov_set_FVR(i_dgp,:) = cover2(dgps{i_dgp}.svma_FVR_cis, dgps{i_dgp}.bounds_pop.FVR_LB, dgps{i_dgp}.bounds_pop.FVR_UB);
     cov_par_FVR_svar(i_dgp,:) = cover2(dgps{i_dgp}.svar_FVR_cis, dgps{i_dgp}.model.FVR, dgps{i_dgp}.model.FVR);
     
+    % Lag length
+    avg_laglength(i_dgp) = mean(dgps{i_dgp}.laglengths);
+    
 end 
 
 % Create table
@@ -71,6 +78,7 @@ for i_h=1:n_hor
     results.(sprintf('%s%d', 'cov_set_FVR', i_h)) = cov_set_FVR(:,i_h);
     results.(sprintf('%s%d%s', 'cov_par_FVR', i_h, '_svar')) = cov_par_FVR_svar(:,i_h);
 end
+results.avg_laglength = avg_laglength;
 
 % Print to screen
 disp(results);

@@ -20,7 +20,8 @@ Tested in: Matlab R2020a on Windows 10 PC (64-bit)
 - [run_sw.m](illustration/run_sw.m): SVMA-IV and SVAR-IV analysis of Smets & Wouters (2007) model
 
 **[simulations](simulations):** simulation study
-- [run_sim.m](simulations/run_sim.m): run Monte Carlo experiment
+- [run_sim.m](simulations/run_sim.m): run Monte Carlo experiments for various DGPs
+- [print_results.m](simulations/print_results.m): display results for all DGPs
 
 ## Example
 
