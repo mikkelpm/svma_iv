@@ -152,7 +152,7 @@ function [bounds, id_recov, inv_test, settings, VAR_OLS] = SVMAIV_estim(Y, Z, va
     end
     
     disp_verbose('Mapping each bootstrap draw into objects of interest...', ip.Results.verbose);
-    disp_verbose(sprintf(strcat(repmat('%4d',1,10), '%s\n'), 10:10:100, '%'), ip.Results.verbose);
+    disp_verbose(sprintf(strcat(repmat('%4d',1,10), '%s'), 10:10:100, '%'), ip.Results.verbose);
     progress_markers = 1/40:1/40:1;
 
     for i_boot = 1:settings.n_boot

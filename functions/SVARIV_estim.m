@@ -101,7 +101,7 @@ function [IRF, FVD, settings, VAR_OLS] = SVARIV_estim(Y, Z, varargin)
     SVARIV_boot.FVD = NaN(length(settings.FVD_hor),dataobj.n_y,settings.n_boot);
 
     disp_verbose('Mapping each bootstrap draw into objects of interest...', ip.Results.verbose);
-    disp_verbose(sprintf(strcat(repmat('%4d',1,10), '%s\n'), 10:10:100, '%'), ip.Results.verbose);
+    disp_verbose(sprintf(strcat(repmat('%4d',1,10), '%s'), 10:10:100, '%'), ip.Results.verbose);
     progress_markers = 1/40:1/40:1;
 
     for i_boot = 1:settings.n_boot
