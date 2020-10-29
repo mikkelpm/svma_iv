@@ -27,7 +27,7 @@ for i_dgp=1:n_dgp
 end
 
 
-%% Create results table
+%% Compute coverage and other statistics
 
 FVR_hor = dgps{1}.settings.FVR_hor;
 n_hor = length(FVR_hor);
@@ -66,18 +66,28 @@ for i_dgp=1:n_dgp % For each DGP...
     
 end 
 
-% Create table
+
+%% Results table
+
 results = table;
 results.dgp = dgp_no;
+
+% True parameters
 results.true_R2_inv = true_R2_inv;
-results.cov_par_R2_inv = cov_par_R2_inv;
-results.cov_set_R2_inv = cov_set_R2_inv;
 for i_h=1:n_hor
     results.(sprintf('%s%d', 'true_FVR', i_h)) = true_FVR(:,i_h);
-    results.(sprintf('%s%d', 'cov_par_FVR', i_h)) = cov_par_FVR(:,i_h);
-    results.(sprintf('%s%d', 'cov_set_FVR', i_h)) = cov_set_FVR(:,i_h);
-    results.(sprintf('%s%d%s', 'cov_par_FVR', i_h, '_svar')) = cov_par_FVR_svar(:,i_h);
 end
+
+% Coverage rates
+results.cov_set_R2_inv = cov_set_R2_inv; % Coverage for identified set
+results.cov_par_R2_inv = cov_par_R2_inv; % Coverage for parameter
+for i_h=1:n_hor
+    results.(sprintf('%s%d', 'cov_set_FVR', i_h)) = cov_set_FVR(:,i_h); % Coverage for identified set
+    results.(sprintf('%s%d', 'cov_par_FVR', i_h)) = cov_par_FVR(:,i_h); % Coverage for parameter
+    results.(sprintf('%s%d%s', 'cov_par_FVR', i_h, '_svar')) = cov_par_FVR_svar(:,i_h); % Coverage for parameter (SVAR-IV)
+end
+
+% Average estimated lag length
 results.avg_laglength = avg_laglength;
 
 % Print to screen
