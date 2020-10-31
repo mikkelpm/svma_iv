@@ -1,5 +1,7 @@
 function [bounds_CI_IS,bounds_CI_para] = CI_fun(bounds_boot,bounds_OLS,settings)
 
+% Bootstrap confidence intervals
+
 %----------------------------------------------------------------
 % Get Inputs
 %----------------------------------------------------------------
@@ -29,7 +31,7 @@ for j=1:length(fields)
 end
 
 %----------------------------------------------------------------
-% CI for Parameter
+% CI for Parameter (Stoye, 2009)
 %----------------------------------------------------------------
 
 bounds_CI_para = struct;

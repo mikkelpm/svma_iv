@@ -1,5 +1,7 @@
 function ABCD = ABCD_fun(model);
 
+% ABCD representation of Dynare model
+
 % prepare inputs
 
 decision = model.decision;

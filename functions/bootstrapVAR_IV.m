@@ -1,5 +1,7 @@
 function VAR_IV_boot = bootstrapVAR_IV(VAR,model,data,settings)
 
+% Homoskedastic recursive residual VAR bootstrap, with external IV
+
 %----------------------------------------------------------------
 % Preparations
 %----------------------------------------------------------------

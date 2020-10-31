@@ -1,5 +1,7 @@
 function FVD_LB = FVD_IS(yzt_aux,model,settings,alpha)
 
+% Identified set for forecast variance decomposition
+
 %----------------------------------------------------------------
 % Preparations
 %----------------------------------------------------------------

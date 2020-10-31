@@ -1,5 +1,8 @@
 function [IRF,FVD,M,tot_weights] = pop_analysis(model,settings);
 
+% Compute impulse responses and forecast variance decompositions
+% implied by ABCD representation of model
+
 %----------------------------------------------------------------
 % Preparations
 %----------------------------------------------------------------

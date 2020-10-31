@@ -1,5 +1,7 @@
 function VAR_pop = popVAR(model,settings)
 
+% Compute VAR representation of ABCD model
+
 %----------------------------------------------------------------
 % Preparations
 %----------------------------------------------------------------

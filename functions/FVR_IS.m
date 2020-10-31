@@ -1,5 +1,7 @@
 function [FVR_LB,FVR_UB,FVR_true] = FVR_IS(yzt_aux,model,settings,alpha)
 
+% Identified set for forecast variance ratio
+
 %----------------------------------------------------------------
 % Preparations
 %----------------------------------------------------------------

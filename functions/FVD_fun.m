@@ -1,5 +1,7 @@
 function FVD = FVD_fun(var,hor,yzt_aux,alpha);
 
+% Forecast variance decomposition bound
+
 Sigma_yzt       = yzt_aux.Sigma_yzt;
 
 maxVar_yt_ythor = yzt_aux.maxVar_yt_ythor(:,:,hor);

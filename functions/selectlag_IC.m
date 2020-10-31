@@ -1,5 +1,7 @@
 function lag = selectlag_IC(data,maxlag,penalty);
 
+% Select VAR lag length using information criterion
+
 % preliminaries
 n_x = size(data,2);
 

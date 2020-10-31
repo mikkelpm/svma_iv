@@ -1,5 +1,7 @@
 function [R2_LB,R2_UB,R2_true] = R2_IS(yzt_aux,model,settings,R2_hor,alpha);
 
+% Identified set for degree of invertibility out to time t+l
+
 %----------------------------------------------------------------
 % Get Inputs
 %----------------------------------------------------------------

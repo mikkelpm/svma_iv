@@ -1,5 +1,7 @@
 function [cond_var,cond_var_1] = Kalman_filter(A,B,C,y)
 
+% Kalman filter for conditional variance calculations
+
 % number of observations and variables
 T = size(y,1);
 n_s = size(A,1);

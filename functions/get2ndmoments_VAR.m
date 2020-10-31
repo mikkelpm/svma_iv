@@ -1,5 +1,7 @@
 function yzt_aux = get2ndmoments_VAR(VAR,model,settings)
 
+% Compute autocovariances implied by reduced-form VAR
+
 %----------------------------------------------------------------
 % Preparations
 %----------------------------------------------------------------

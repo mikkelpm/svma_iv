@@ -1,5 +1,7 @@
 function [IRF_CI,FVD_CI] = CI_SVARIV_fun(SVARIV_OLS,SVARIV_boot,settings)
 
+% Bootstrap confidence intervals, SVAR-IV
+
 %----------------------------------------------------------------
 % IRF
 %----------------------------------------------------------------

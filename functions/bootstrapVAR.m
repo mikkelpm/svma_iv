@@ -1,5 +1,7 @@
 function VAR_boot = bootstrapVAR(VAR,model,data,settings)
 
+% Homoskedastic recursive residual VAR bootstrap
+
 %----------------------------------------------------------------
 % Estimate VAR
 %----------------------------------------------------------------

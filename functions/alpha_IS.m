@@ -1,5 +1,7 @@
 function [alpha_LB,alpha_UB,alpha_true,alpha_plot] = alpha_IS(yzt_aux,model,settings);
 
+% Identified set for scale parameter alpha
+
 %----------------------------------------------------------------
 % Get Inputs
 %----------------------------------------------------------------
@@ -36,7 +38,7 @@ alpha_UB = sqrt(Var_zt);
 % Lower Bound
 %----------------------------------------------------------------
 
-if bnd_recov == 0
+if bnd_recov == 0 % Sharp lower bound
 
 alpha_LB_fun = @(omega) sqrt(real(ctranspose(s_yzt(omega)) * s_y(omega)^(-1) * s_yzt(omega)));
 omega_grid = linspace(0,2*pi,ngrid)';
@@ -49,7 +51,7 @@ alpha_LB = max(alpha_LB_vals);
 alpha_plot.alpha_LB_vals = alpha_LB_vals;
 alpha_plot.omega_grid    = omega_grid;
 
-elseif bnd_recov == 1
+elseif bnd_recov == 1 % Weaker lower bound (sharp under recoverability)
 
 Var_y = NaN((2*hor_pred+1) * n_y, (2*hor_pred+1) * n_y);
 for i = 1:2*hor_pred+1

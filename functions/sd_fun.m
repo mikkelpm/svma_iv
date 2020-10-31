@@ -1,5 +1,7 @@
 function sd = sd_fun(omega,Theta_Wold)
 
+% Spectral density of moving average
+
 % preparations
 hor = size(Theta_Wold,1);
 

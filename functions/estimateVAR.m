@@ -1,5 +1,7 @@
 function VAR_sim = estimateVAR(data,settings)
 
+% Least-squares VAR estimation
+
 % preliminaries
 n_x = size(data,2);
 T   = size(data,1);

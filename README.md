@@ -1,6 +1,6 @@
 # Instrumental variable identification of dynamic variance decompositions
 
-Matlab code for inference on variance decompositions and the degree of invertibility/recoverability in a general Structural Vector Moving Average (SVMA) model identified by external instruments (IVs)
+Matlab code for inference on variance decompositions and the degree of invertibility/recoverability in a general Structural Vector Moving Average (SVMA) model identified by external instruments (IVs, also known as proxies)
 
 **Reference:**
 Plagborg-Møller, Mikkel and Christian K. Wolf (2020), "Instrumental Variable Identification of Dynamic Variance Decompositions", https://scholar.princeton.edu/mikkelpm/decomp_iv
@@ -43,7 +43,7 @@ Output:
 - `id_recov` structure: results under additional assumption of recoverability
   - `id_recov.estim`: point estimates of parameters
   - `id_recov.ci`: confidence intervals for parameters
-- `inv_test` structure: pre-test for invertibility, implemented either as a Granger casuality test for all equations jointly (subfield `all`) or in each *y* equation separately (subfield `eqns`)
+- `inv_test` structure: pre-test for invertibility, implemented as a Granger casuality test, either in all equations jointly (subfield `all`) or in each *y* equation separately (subfield `eqns`)
   - `inv_test.wald_stat`: Wald statistics
   - `inv_test.df`: degrees of freedom
   - `inv_test.pval`: p-values

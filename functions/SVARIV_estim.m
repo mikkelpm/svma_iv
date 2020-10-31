@@ -31,7 +31,7 @@ function [IRF, FVD, settings, VAR_OLS] = SVARIV_estim(Y, Z, varargin)
     
     % Optional inputs: output requested
     addParameter(ip, 'horiz', 1:24, @isnumeric);            % 1 x k     Horizons of IRF/FVD to report (default: 1:24)
-    addParameter(ip, 'verbose', true, @islogical);          % bool      Print progress to screen?
+    addParameter(ip, 'verbose', true, @islogical);          % bool      Print progress to screen? (default: yes)
     
     % Optional inputs: inference/bootstrap
     addParameter(ip, 'signif', 0.1, @isnumeric);            % 1 x 1     Significance level (default: 10%)

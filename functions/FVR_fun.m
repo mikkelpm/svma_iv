@@ -1,5 +1,7 @@
 function FVR = FVR_fun(var,hor,yzt_aux,alpha);
 
+% Forecast variance ratio, given alpha
+
 Sigma_yzt     = yzt_aux.Sigma_yzt;
 
 Var_y_yhor = yzt_aux.Var_y_yhor(:,:,hor);

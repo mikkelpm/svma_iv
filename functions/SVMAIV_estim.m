@@ -55,7 +55,7 @@ function [bounds, id_recov, inv_test, settings, VAR_OLS] = SVMAIV_estim(Y, Z, va
     addParameter(ip, 'compute_FVD', true, @islogical);      % bool      Compute Forecast Variance Decomposition? (default: yes)
     addParameter(ip, 'horiz', 1:24, @isnumeric);            % 1 x k     Horizons of FVR/FVD to report (default: 1:24)
     addParameter(ip, 'ci_param', false, @islogical);        % bool      Compute confidence intervals for parameters themselves (not identified sets)? (default: no)
-    addParameter(ip, 'verbose', true, @islogical);          % bool      Print progress to screen?
+    addParameter(ip, 'verbose', true, @islogical);          % bool      Print progress to screen? (default: yes)
     
     % Optional inputs: inference/bootstrap
     addParameter(ip, 'signif', 0.1, @isnumeric);            % 1 x 1     Significance level (default: 10%)
@@ -63,8 +63,8 @@ function [bounds, id_recov, inv_test, settings, VAR_OLS] = SVMAIV_estim(Y, Z, va
     addParameter(ip, 'optim_opts', optimoptions('fmincon', 'Display', 'notify'), @(x) isobject(x) | isempty(x)); % obj  Numerical options for Stoye CI construction
     
     % Optional inputs: numerical settings
-    addParameter(ip, 'use_kalman', true, @islogical);       % bool      Use Kalman filter for conditional variance calculations? (default: true)
-    addParameter(ip, 'VMA_hor', 100, @isnumeric);           % 1 x 1     Truncation horizon for VMA representation of VAR
+    addParameter(ip, 'use_kalman', true, @islogical);       % bool      Use Kalman filter for conditional variance calculations? (default: yes)
+    addParameter(ip, 'VMA_hor', 100, @isnumeric);           % 1 x 1     Truncation horizon for VMA representation of VAR (default: 100)
     
     parse(ip, Y, Z, varargin{:}); % Parse inputs
     

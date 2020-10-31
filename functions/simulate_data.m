@@ -1,5 +1,7 @@
 function [data] = simulate_data(model,settings)
 
+% Simulate data for ABCD model
+
 T      = settings.T;
 n_eps  = model.n_eps;
 n_nu   = model.n_nu;

@@ -1,5 +1,7 @@
 function bounds = get_IS(yzt_aux,model,settings)
 
+% Identified sets for all model parameters
+
 bounds = struct;
 
 %----------------------------------------------------------------

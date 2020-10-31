@@ -1,5 +1,7 @@
 function VAR_sim = estimateVAR_IV(data_y,data_z,settings)
 
+% Least-squares VAR estimation, with external IV
+
 %----------------------------------------------------------------
 % Preparations
 %----------------------------------------------------------------

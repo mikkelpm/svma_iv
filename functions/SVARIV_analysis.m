@@ -1,5 +1,8 @@
 function [SVARIV_IRF,SVARIV_FVD,SVARIV_weights] = SVARIV_analysis(VAR,model,settings)
 
+% Impulse responses, forecast variance decompositions, and
+% non-invertibility weights for SVAR-IV analysis
+
 %----------------------------------------------------------------
 % Preparations
 %----------------------------------------------------------------

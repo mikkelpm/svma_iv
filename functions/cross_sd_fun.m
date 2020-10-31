@@ -1,5 +1,7 @@
 function cross_sd = cross_sd_fun(omega,Sigma_yztilde)
 
+% Cross-spectrum of y and tilde{z}
+
 % preparations
 hor = size(Sigma_yztilde,1);
 
