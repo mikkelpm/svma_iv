@@ -24,7 +24,7 @@ VAR_coeff_y = VAR.VAR_coeff_y;
 
 VAR_coeff_y_boot = NaN(p*n_y+1,n_y,n_boot);
 Sigma_u_y_boot = NaN(n_y,n_y,n_boot);
-gamma_boot = NaN(n_y,n_boot);
+impact_irs_boot = NaN(n_y,n_boot);
 
 % disp('Bootstrapping VAR...');
 
@@ -58,13 +58,13 @@ for i_boot = 1:n_boot
     VAR_boot = estimateVAR_IV(Y_boot,Z_boot,settings);
     VAR_coeff_y_boot(:,:,i_boot) = VAR_boot.VAR_coeff_y;
     Sigma_u_y_boot(:,:,i_boot) = VAR_boot.Sigma_u_y;
-    gamma_boot(:,i_boot) = VAR_boot.gamma;
+    impact_irs_boot(:,i_boot) = VAR_boot.impact_irs;
     
 end
 
 % collect results
 VAR_IV_boot.VAR_coeff_y = VAR_coeff_y_boot;
 VAR_IV_boot.Sigma_u_y   = Sigma_u_y_boot;
-VAR_IV_boot.gamma       = gamma_boot;
+VAR_IV_boot.impact_irs  = impact_irs_boot;
 
 end

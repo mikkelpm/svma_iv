@@ -99,6 +99,9 @@ VAR_pop.Sigma_u_y = C_y * Sigma_states * C_y' + D_y * D_y';
 % get covariance
 
 VAR_pop.cov_uz = model.alpha * model.ABCD.D_y(:,1);
-VAR_pop.gamma  = VAR_pop.cov_uz ./ sqrt(VAR_pop.cov_uz' * VAR_pop.Sigma_u_y^(-1) * VAR_pop.cov_uz);
+
+% get SVAR-IV rotation (note that impact_irs=Sigma_u_y*gamma, where shock of interest = gamma' * u)
+
+VAR_pop.impact_irs = VAR_pop.cov_uz ./ sqrt(VAR_pop.cov_uz' * VAR_pop.Sigma_u_y^(-1) * VAR_pop.cov_uz);
 
 end

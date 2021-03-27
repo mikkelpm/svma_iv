@@ -112,7 +112,7 @@ function [IRF, FVD, settings, VAR_OLS] = SVARIV_estim(Y, Z, varargin)
         
         VAR_sim.VAR_coeff_y = VAR_boot.VAR_coeff_y(:,:,i_boot);
         VAR_sim.Sigma_u_y   = VAR_boot.Sigma_u_y(:,:,i_boot);
-        VAR_sim.gamma       = VAR_boot.gamma(:,i_boot);
+        VAR_sim.impact_irs  = VAR_boot.impact_irs(:,i_boot);
 
         [SVARIV_boot.IRF(:,:,i_boot),SVARIV_boot.FVD(:,:,i_boot)] = SVARIV_analysis(VAR_sim,dataobj,settings);
 

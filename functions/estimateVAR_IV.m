@@ -45,7 +45,12 @@ Xlag = [Xlag(p+1:end,:) ones(VAR_sim.T_VAR,1)];
 VAR_sim.IV_beta = Xlag\data_z(p+1:end);
 VAR_sim.IV_res = data_z(p+1:end)-Xlag*VAR_sim.IV_beta; % Residuals
 
+% get covariance
+
 VAR_sim.cov_uz = VAR_sim.VAR_res_y'*VAR_sim.IV_res/VAR_sim.T_VAR; % Covariance of VAR reduced-form residuals and IV residual
-VAR_sim.gamma = VAR_sim.cov_uz/sqrt(VAR_sim.cov_uz'*(VAR_sim.Sigma_u_y\VAR_sim.cov_uz)); % Impact impulse responses to identified shock
+
+% get SVAR-IV rotation (note that impact_irs=Sigma_u_y*gamma, where shock of interest = gamma' * u)
+
+VAR_sim.impact_irs = VAR_sim.cov_uz/sqrt(VAR_sim.cov_uz'*(VAR_sim.Sigma_u_y\VAR_sim.cov_uz)); % Impact impulse responses to identified shock
 
 end

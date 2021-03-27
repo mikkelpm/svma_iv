@@ -11,7 +11,7 @@ n_y         = model.n_y;
 VMA_hor     = settings.VMA_hor;
 laglength   = VAR.laglength;
 VAR_coeff_y = VAR.VAR_coeff_y;
-gamma       = VAR.gamma;
+impact_irs  = VAR.impact_irs;
 Sigma_u_y   = VAR.Sigma_u_y;
 FVD_hor     = settings.FVD_hor;
 
@@ -33,7 +33,7 @@ for l = 1:VMA_hor
         end
     end
     
-    SVARIV_IRF(:,:,l) = IRF_Wold(:,:,l)*gamma;
+    SVARIV_IRF(:,:,l) = IRF_Wold(:,:,l)*impact_irs;
     
 end
 
@@ -52,7 +52,7 @@ FVD_denom = zeros(1,n_y);
 for l=1:VMA_hor % For each forecast horizon...
     
     % Add to numerator of FVD
-    FVD_numer = FVD_numer + ((IRF_Wold(:,:,l)*gamma).^2)';
+    FVD_numer = FVD_numer + ((IRF_Wold(:,:,l)*impact_irs).^2)';
     
     % Add to denominator of FVD
     forec_var_contrib = IRF_Wold(:,:,l)*Sigma_u_y*IRF_Wold(:,:,l)';
@@ -75,7 +75,7 @@ n_xi       = model.n_xi;
 SVARIV_weights = NaN(VMA_hor,n_xi);
 
 for l = 1:VMA_hor
-    SVARIV_weights(l,:) = gamma' * Sigma_u_y^(-1) * model.M(:,:,l);
+    SVARIV_weights(l,:) = impact_irs' * Sigma_u_y^(-1) * model.M(:,:,l);
 end
 
 else
