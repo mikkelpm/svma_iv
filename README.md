@@ -7,6 +7,8 @@ Plagborg-Møller, Mikkel and Christian K. Wolf (2020), "Instrumental Variable Id
 
 Tested in: Matlab R2020a on Windows 10 PC (64-bit)
 
+Other versions: [Python code](https://github.com/jbduarte/svma_iv) written by João B. Duarte
+
 ## Contents
 
 **[functions](functions):** Matlab routines
