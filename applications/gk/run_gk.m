@@ -1,4 +1,6 @@
+clc
 clear all;
+close all;
 
 % Empirical application: Gertler & Karadi (AEJ Macro, 2015)
 
