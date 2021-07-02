@@ -11,7 +11,9 @@ close all;
 data.endo_vars = {'Oil price','Oil production','Oil inventories','World IP','NEER','IP','CPI','FFR','VXO','TOT'};
 data.iv        = 'oil_surprise';
 
-data.smpl_start = '1974M01'; 
+% data.smpl_start = '1974M01'; 
+% data.smpl_start = '1983M04'; 
+data.smpl_start = '1983M03'; 
 data.smpl_end   = '2017M12'; 
 
 % data
@@ -27,11 +29,26 @@ data.smplEndInd   = find(strcmp(data.sampleDates,data.smpl_end));
 
 data.Y = dataEndo(data.smplStartInd:data.smplEndInd,:);
 
+data.diff = [0,1,1,1,1,1,1,0,0,0];
+
+for i = 1:size(data.Y,2)
+    if data.diff(i) == 1
+        data.Y(:,i) = [NaN;12 * (data.Y(2:end,i) - data.Y(1:end-1,i))];
+    end
+end
+
 % IV
 
 proxyRaw = [oilProxiesWTIM(:,14)];
 
 data.Z = proxyRaw(data.smplStartInd:data.smplEndInd,:);
+
+% adjust sample
+
+if max(data.diff) == 1
+    data.Y = data.Y(2:end,:);
+    data.Z = data.Z(2:end,:);
+end
 
 clear sampleDates dataEndo oilProxiesWTIM proxyRaw
 
@@ -89,8 +106,8 @@ disp([bounds.ci.lower.R2_recov bounds.ci.upper.R2_recov]);
 % figure
 
 plots.xticks = 0:10:50; % X axis ticks for FVR plot
-plots.titles = {'FVR of Oil Price', 'FVR of Oil Production', 'FVR of Oil Inventories', 'FVR of World IP', 'FVR of NEER', ...
-    'FVR of IP', 'FVR of CPI', 'FVR of FFR', 'FVR of VXO', 'FVR of TOT'};
+plots.titles = {'FVR of Oil Price', 'FVR of Oil Production Growth', 'FVR of Oil Inventories Growth', 'FVR of World IP Growth', 'FVR of U.S. NEER Growth', ...
+    'FVR of U.S. IP Growth', 'FVR of U.S. CPI Growth', 'FVR of FFR', 'FVR of VXO', 'FVR of U.S. TOT'};
 plots.xlabel = 'Horizon (Months)'; % X axis label for FVR plot
 plots.ylabel = ''; % Y axis label for FVR plot
 mkdir('figures'); % Figure output folder
