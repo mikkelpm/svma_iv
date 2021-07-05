@@ -1,5 +1,8 @@
 function plot_band(lower, upper, lower_line, upper_line, plot_title, plot_xlabel, plot_ylabel, plot_legend, varargin)
 
+% ticks interpreter
+set(gca,'TickLabelInterpreter','latex')
+
 % Plot lines and confidence band for dynamic variance decompositions
 
 maxmin = @(x) max(min(x,1),0);
