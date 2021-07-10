@@ -6,7 +6,7 @@ Matlab code for inference on variance decompositions and the degree of invertibi
 Plagborg-Møller, Mikkel and Christian K. Wolf (2021), "Instrumental Variable Identification of Dynamic Variance Decompositions", https://scholar.princeton.edu/mikkelpm/decomp_iv (paper + online appendix)
 
 **Acknowledgements:**
-We are grateful to Diego Känzig for allowing us to reproduce some of the data files used in his 2021 AER paper.
+We are grateful to [Diego Känzig](https://github.com/dkaenzig) for allowing us to reproduce some of the data files used in his [2021 AER paper](https://www.aeaweb.org/articles?id=10.1257/aer.20190964)
 
 Tested in: Matlab R2020a on Windows 10 PC (64-bit)
 
