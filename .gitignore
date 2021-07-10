@@ -5,3 +5,5 @@
 *.png
 *.eps
 *.DS_Store
+!applications/kaenzig/dataQuantM.mat
+!applications/kaenzig/OilSurprisesMLog.mat

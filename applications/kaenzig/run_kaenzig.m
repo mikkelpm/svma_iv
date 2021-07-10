@@ -4,33 +4,24 @@ close all;
 
 % Empirical application: Kaenzig (AER, 2021)
 
+
 %% Load data
 
-% settings
+% Settings
+data.endo_vars  = {'oil_price','oil_production','oil_inventories','world_ip','neer','ip','cpi','ffr','vxo','tot'}; % Abbreviations of endogenous variables
+data.diff       = [0,1,1,1,1,1,1,0,0,0]; % =1: take first differences of endogenous variable
+data.iv         = 'oil_surprise';
+data.smpl_start = '1983M03'; % Sample start point
+data.smpl_end   = '2017M12'; % Sample end point
 
-data.endo_vars = {'oil_price','oil_production','oil_inventories','world_ip','neer','ip','cpi','ffr','vxo','tot'};
-data.iv        = 'oil_surprise';
-
-% data.smpl_start = '1974M01'; 
-% data.smpl_start = '1983M04'; 
-data.smpl_start = '1983M03'; 
-data.smpl_end   = '2017M12'; 
-
-% data
-
-load data_kaenzig
-
-% endogenous variables
-
-data.sampleDates = sampleDates;
-
+% Endogenous variables
+dat_endo = load('dataQuantM'); % Endogenous variables
+data.sampleDates = dat_endo.sampleDates;
 data.smplStartInd = find(strcmp(data.sampleDates,data.smpl_start));
 data.smplEndInd   = find(strcmp(data.sampleDates,data.smpl_end));
+data.Y = dat_endo.data(data.smplStartInd:data.smplEndInd,:);
 
-data.Y = dataEndo(data.smplStartInd:data.smplEndInd,:);
-
-data.diff = [0,1,1,1,1,1,1,0,0,0];
-
+% First differences
 for i = 1:size(data.Y,2)
     if data.diff(i) == 1
         data.Y(:,i) = [NaN;12 * (data.Y(2:end,i) - data.Y(1:end-1,i))];
@@ -38,19 +29,18 @@ for i = 1:size(data.Y,2)
 end
 
 % IV
-
-proxyRaw = [oilProxiesWTIM(:,14)];
-
+dat_iv=load('OilSurprisesMLog'); % IV
+proxyRaw = dat_iv.oilProxiesWTIM(:,14);
 data.Z = proxyRaw(data.smplStartInd:data.smplEndInd,:);
 
-% adjust sample
-
+% Adjust sample
 if max(data.diff) == 1
     data.Y = data.Y(2:end,:);
     data.Z = data.Z(2:end,:);
 end
 
-clear sampleDates dataEndo oilProxiesWTIM proxyRaw
+clear sampleDates dataEndo oilProxiesWTIM proxyRaw;
+
 
 %% SVMA-IV inference
 
@@ -58,14 +48,13 @@ disp('*** SVMA-IV analysis ***');
 
 % Preliminaries
 addpath('../../functions');     % Add folder with SVMA-IV analysis functions
-addpath('subroutines');         % Add folder with some application-specific auxiliary functions
 rng(2018);                      % Seed random number generator (for bootstrap)
 
 % Estimation settings (see other optional settings in "functions/SVMAIV_estim.m")
-settings = {'p', 12;        % Information criterion
-            'n_boot', 100;      % Number of bootstrap samples
+settings = {'p', 12;            % Lag length
+            'n_boot', 1e3;      % Number of bootstrap samples
             'signif', 0.1;      % Significance level
-            'horiz', 1:50}';    % Horizons of FVR to report
+            'horiz', 1:48}';    % Horizons of FVR to report
 
 % Run inference routines
 [bounds, id_recov, inv_test, settings_struct] = SVMAIV_estim(data.Y, data.Z, settings{:});
@@ -105,7 +94,7 @@ disp([bounds.ci.lower.R2_recov bounds.ci.upper.R2_recov]);
 
 % figure
 
-plots.xticks = 0:10:50; % X axis ticks for FVR plot
+plots.xticks = 0:12:48; % X axis ticks for FVR plot
 plots.titles = {'FVR of Oil Price', 'FVR of Oil Production Growth', 'FVR of Oil Inventories Growth', 'FVR of World IP Growth', 'FVR of U.S. NEER Growth', ...
     'FVR of U.S. IP Growth', 'FVR of U.S. CPI Growth', 'FVR of FFR', 'FVR of VXO', 'FVR of U.S. TOT'};
 plots.xlabel = 'Horizon (Months)'; % X axis label for FVR plot
@@ -131,11 +120,8 @@ for i=1:size(data.Y,2) % For each macro variable...
 
 end
 
-clear i
+clear i;
 
-% table
-
-svmaiv_table
 
 %% SVAR-IV analysis for comparison (assumes invertibility)
 
@@ -165,8 +151,4 @@ for i=1:size(data.Y,2) % For each macro variable...
     
 end
 
-clear i
-
-% FVD table
-
-svariv_table
+clear i;

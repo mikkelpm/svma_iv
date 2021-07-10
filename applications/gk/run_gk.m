@@ -32,7 +32,7 @@ rng(2018);                      % Seed random number generator (for bootstrap)
 
 % Estimation settings (see other optional settings in "functions/SVMAIV_estim.m")
 settings = {'ic', 'aic';        % Information criterion
-            'n_boot', 500;      % Number of bootstrap samples
+            'n_boot', 1e3;      % Number of bootstrap samples
             'signif', 0.1;      % Significance level
             'horiz', 1:24}';    % Horizons of FVR to report
 
