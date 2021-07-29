@@ -5,9 +5,6 @@ Matlab code for inference on variance decompositions and the degree of invertibi
 **Reference:**
 Plagborg-Møller, Mikkel and Christian K. Wolf (2021), "Instrumental Variable Identification of Dynamic Variance Decompositions", https://scholar.princeton.edu/mikkelpm/decomp_iv (paper + online appendix)
 
-**Acknowledgements:**
-We are grateful to [Diego Känzig](https://github.com/dkaenzig) for allowing us to reproduce some of the data files used in his [2021 AER paper](https://www.aeaweb.org/articles?id=10.1257/aer.20190964)
-
 Tested in: Matlab R2020a on Windows 10 PC (64-bit)
 
 Other versions: [Python code](https://github.com/jbduarte/svma_iv) written by João B. Duarte
@@ -70,3 +67,8 @@ The figures and tables in our paper and supplement are produced as follows:
 - Table 2: First run [simulations/run_sim.m](simulations/run_sim.m) nine separate times, with the variable `model.dgp` at the top set to each of the options `0` through `8`. Then run [simulations/print_results.m](simulations/print_results.m)
 - Figures B.1-B.6 and Table B.1: [illustration/run_sw.m](illustration/run_sw.m)
 - Figures B.8-B.11: [applications/kaenzig/run_kaenzig.m](applications/kaenzig/run_kaenzig.m)
+
+## Acknowledgements
+We are grateful to [Diego Känzig](https://github.com/dkaenzig) for allowing us to reproduce some of the data files used in his [2021 AER paper](https://www.aeaweb.org/articles?id=10.1257/aer.20190964).
+
+Wolf acknowledges support from the Alfred P. Sloan Foundation and the Macro Financial Modeling Project. Plagborg-Møller acknowledges that this material is based upon work supported by the National Science Foundation under Grant \#1851665.
