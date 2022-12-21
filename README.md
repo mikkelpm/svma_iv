@@ -3,7 +3,7 @@
 Matlab code for inference on variance decompositions and the degree of invertibility/recoverability in a general Structural Vector Moving Average (SVMA) model identified by external instruments (IVs, also known as proxies)
 
 **Reference:**
-Plagborg-Møller, Mikkel and Christian K. Wolf (2021), "Instrumental Variable Identification of Dynamic Variance Decompositions", https://scholar.princeton.edu/mikkelpm/decomp_iv (paper + online appendix)
+Plagborg-Møller, Mikkel and Christian K. Wolf (2022), "[Instrumental Variable Identification of Dynamic Variance Decompositions](https://doi.org/10.1086/720141)", *Journal of Political Economy* 130(8), 2164-2202 (also available as [arXiv:2011.01380](http://arxiv.org/abs/2011.01380))
 
 Tested in: Matlab R2020a on Windows 10 PC (64-bit)
 
